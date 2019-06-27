@@ -4,7 +4,7 @@ class QuestionsController < ApplicationController
 
   def create
     if question.save
-      redirect_to question
+      redirect_to question, notice: 'Your question successfully created.'
     else
       render :new
     end
