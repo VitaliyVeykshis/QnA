@@ -1,6 +1,7 @@
 class QuestionsController < ApplicationController
   expose :questions, ->{ Question.all }
   expose :question
+  expose :answer, ->{ question.answers.build }
 
   def create
     if question.save
