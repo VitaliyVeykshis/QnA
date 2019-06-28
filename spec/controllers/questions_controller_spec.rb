@@ -1,6 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe QuestionsController, type: :controller do
+  sign_in_user
   let(:question) { create(:question) }
 
   describe 'POST #create' do

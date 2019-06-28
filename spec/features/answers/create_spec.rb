@@ -6,15 +6,35 @@ feature 'The user can write the answer to a question', %q{
   I'd like to be able to answer the question
 } do
 
+  given(:user) { create(:user) }
   given(:question) { create(:question) }
   given(:answer) { create(:answer, question: question) }
 
-  scenario 'The user answer the question' do
+  scenario 'Authenticated user answer the question' do
+    sign_in_as(user)
+
     visit question_path(question)
 
     fill_in 'Answer', with: answer.body
     click_on 'Post'
 
     expect(page).to have_content answer.body
+  end
+
+  scenario 'Authenticated user answer the question with errors' do
+    sign_in_as(user)
+
+    visit question_path(question)
+
+    click_on 'Post'
+
+    expect(page).to have_content "Body can't be blank"
+  end
+
+  scenario 'Unauthenticated user tries to answer the question' do
+    visit question_path(question)
+    click_on 'Post'
+
+    expect(page).to have_content 'You need to sign in or sign up before continuing.'
   end
 end

@@ -1,6 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe AnswersController, type: :controller do
+  sign_in_user
   let(:question) { create(:question) }
 
   describe 'POST #create' do
@@ -25,10 +26,10 @@ RSpec.describe AnswersController, type: :controller do
         }.not_to change(Answer, :count)
       end
 
-      it 're-renders new view' do
+      it 'renders question show view' do
         post :create, params: { question_id: question, answer: attributes_for(:answer, :invalid) }
 
-        expect(response).to render_template :new
+        expect(response).to render_template 'questions/show'
       end
     end
   end

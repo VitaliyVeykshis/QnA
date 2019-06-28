@@ -1,4 +1,5 @@
 class AnswersController < ApplicationController
+  before_action :authenticate_user!, except: [:index, :show]
   expose :question
   expose :answers, ->{ question.answers }
   expose :answer, build: ->{ answers.new(answer_params) }
@@ -7,7 +8,7 @@ class AnswersController < ApplicationController
     if answer.save
       redirect_to answer.question
     else
-      render :new
+      render 'questions/show'
     end
   end
 

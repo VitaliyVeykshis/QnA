@@ -5,8 +5,13 @@ feature 'User can create question', %q{
   As an authenticated user
   I'd like to be able to ask the question
 } do
-  scenario 'User ask a question' do
+  given(:user) { create(:user) }
+
+  scenario 'Authenticated user ask a question' do
+    sign_in_as(user)
+
     visit questions_path
+
     click_on 'Ask question'
 
     fill_in 'Title', with: 'Test question'
@@ -16,5 +21,23 @@ feature 'User can create question', %q{
     expect(page).to have_content 'Your question successfully created.'
     expect(page).to have_content 'Test question'
     expect(page).to have_content 'text text text'
+  end
+
+  scenario 'Authenticated user asks a question with errors' do
+    sign_in_as(user)
+
+    visit questions_path
+
+    click_on 'Ask question'
+    click_on 'Ask'
+
+    expect(page).to have_content "Title can't be blank"
+  end
+
+  scenario 'Unauthenticated user tries to ask a question' do
+    visit questions_path
+    click_on 'Ask question'
+
+    expect(page).to have_content 'You need to sign in or sign up before continuing.'
   end
 end
