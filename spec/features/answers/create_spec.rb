@@ -8,17 +8,16 @@ feature 'The user can write the answer to a question', %q{
 
   given(:user) { create(:user) }
   given(:question) { create(:question, user: user) }
-  given(:answer) { create(:answer, question: question, user: user) }
 
   scenario 'Authenticated user answer the question' do
     sign_in_as(user)
 
     visit question_path(question)
 
-    fill_in 'Answer', with: answer.body
+    fill_in 'Answer', with: 'Answer body'
     click_on 'Post'
 
-    expect(page).to have_content answer.body
+    expect(page).to have_content 'Answer body'
   end
 
   scenario 'Authenticated user answer the question with errors' do
