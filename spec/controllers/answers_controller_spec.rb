@@ -1,8 +1,10 @@
 require 'rails_helper'
 
 RSpec.describe AnswersController, type: :controller do
-  sign_in_user
-  let(:question) { create(:question, user: @user) }
+  let(:user) { create(:user) }
+  let(:question) { create(:question, user: user) }
+
+  before { sign_in_as(user) }
 
   describe 'POST #create' do
     context 'with valid attributes' do
@@ -15,7 +17,7 @@ RSpec.describe AnswersController, type: :controller do
       it 'links the new answer with author' do
         expect {
           post :create, params: { question_id: question, answer: attributes_for(:answer) }
-        }.to change(@user.answers, :count).by(1)
+        }.to change(user.answers, :count).by(1)
       end
 
       it 'redirects to question' do
@@ -41,7 +43,7 @@ RSpec.describe AnswersController, type: :controller do
   end
 
   describe 'DELETE #destroy' do
-    let!(:answer) { create(:answer, question: question, user: @user) }
+    let!(:answer) { create(:answer, question: question, user: user) }
 
     context 'when author' do
       it 'deletes answer' do

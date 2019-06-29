@@ -1,8 +1,10 @@
 require 'rails_helper'
 
 RSpec.describe QuestionsController, type: :controller do
-  sign_in_user
-  let(:question) { create(:question, user: @user) }
+  let(:user) { create(:user) }
+  let(:question) { create(:question, user: user) }
+
+  before { sign_in_as(user) }
 
   describe 'POST #create' do
     context 'with valid attributes' do
@@ -15,7 +17,7 @@ RSpec.describe QuestionsController, type: :controller do
       it 'links the new question with author' do
         expect {
           post :create, params: { question: attributes_for(:question) }
-        }.to change(@user.questions, :count).by(1)
+        }.to change(user.questions, :count).by(1)
       end
 
       it 'redirects to show view' do
