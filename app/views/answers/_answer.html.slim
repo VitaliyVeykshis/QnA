@@ -1,2 +1,5 @@
-div
-  = answer.body
+-if answer.id
+  div
+    = answer.body
+    - if current_user&.author?(answer)
+      = link_to 'Delete answer', answer_path(answer), method: :delete, data: {confirm: 'Are you sure?'}

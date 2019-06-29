@@ -5,10 +5,21 @@ class QuestionsController < ApplicationController
   expose :answer, ->{ question.answers.build }
 
   def create
+    question.user = current_user
+
     if question.save
       redirect_to question, notice: 'Your question successfully created.'
     else
       render :new
+    end
+  end
+
+  def destroy
+    if current_user.author?(question)
+      question.destroy
+      redirect_to questions_path
+    else
+      redirect_to question
     end
   end
 

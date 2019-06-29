@@ -6,8 +6,8 @@ feature 'The user sees specific question', %q{
   I'd like to be able to view specific question
 } do
   given(:user) { create(:user) }
-  given!(:question) { create(:question) }
-  given!(:answers) { create_list(:answer, 2, question: question) }
+  given!(:question) { create(:question, user: user) }
+  given!(:answers) { create_list(:answer, 2, question: question, user: user) }
 
   scenario 'Authenticated user sees specific question with answers' do
     sign_in_as(user)

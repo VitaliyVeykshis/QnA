@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe AnswersController, type: :controller do
   sign_in_user
-  let(:question) { create(:question) }
+  let(:question) { create(:question, user: @user) }
 
   describe 'POST #create' do
     context 'with valid attributes' do
@@ -30,6 +30,37 @@ RSpec.describe AnswersController, type: :controller do
         post :create, params: { question_id: question, answer: attributes_for(:answer, :invalid) }
 
         expect(response).to render_template 'questions/show'
+      end
+    end
+  end
+
+  describe 'DELETE #destroy' do
+    let!(:answer) { create(:answer, question: question, user: @user) }
+
+    context 'when author' do
+      it 'deletes answer' do
+        expect { delete :destroy, params: { id: answer } }.to change(Answer, :count).by(-1)
+      end
+
+      it 'redirects to question show view' do
+        delete :destroy, params: { id: answer }
+
+        expect(response).to redirect_to question_path(answer.question)
+      end
+    end
+
+    context 'when not author' do
+      let(:second_user) { create(:user) }
+      let!(:second_answer) { create(:answer, question: question, user: second_user) }
+
+      it 'deletes answer' do
+        expect { delete :destroy, params: { id: second_answer } }.not_to change(Answer, :count)
+      end
+
+      it 'redirects to question show view' do
+        delete :destroy, params: { id: second_answer }
+
+        expect(response).to redirect_to question_path(second_answer.question)
       end
     end
   end

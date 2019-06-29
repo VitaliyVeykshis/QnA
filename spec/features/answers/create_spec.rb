@@ -7,8 +7,8 @@ feature 'The user can write the answer to a question', %q{
 } do
 
   given(:user) { create(:user) }
-  given(:question) { create(:question) }
-  given(:answer) { create(:answer, question: question) }
+  given(:question) { create(:question, user: user) }
+  given(:answer) { create(:answer, question: question, user: user) }
 
   scenario 'Authenticated user answer the question' do
     sign_in_as(user)
