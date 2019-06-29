@@ -1,4 +1,4 @@
--if answer.id
+-if answer.persisted?
   div
     = answer.body
     - if current_user&.author?(answer)
