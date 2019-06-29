@@ -1,5 +1,5 @@
 class AnswersController < ApplicationController
-  before_action :authenticate_user!, except: [:index, :show]
+  before_action :authenticate_user!
   expose :question
   expose :answers, ->{ question.answers }
   expose :answer, build: ->{ answers.new(answer_params) }
