@@ -21,9 +21,9 @@ feature 'User can edit his answer', %q{
     scenario 'edits his answer', js: true do
       visit question_path(question)
 
-      click_on 'Edit'
-
       within '.answers' do
+        click_on 'Edit'
+
         fill_in 'answer_body', with: 'edited answer'
         click_on 'Save'
 
@@ -36,9 +36,9 @@ feature 'User can edit his answer', %q{
     scenario 'edits his answer with errors', js: true do
       visit question_path(question)
 
-      click_on 'Edit'
-
       within '.answers' do
+        click_on 'Edit'
+
         fill_in 'answer_body', with: ''
         click_on 'Save'
 
