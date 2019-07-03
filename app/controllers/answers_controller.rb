@@ -6,12 +6,7 @@ class AnswersController < ApplicationController
 
   def create
     answer.user = current_user
-
-    if answer.save
-      redirect_to answer.question
-    else
-      render 'questions/show'
-    end
+    answer.save
   end
 
   def destroy
