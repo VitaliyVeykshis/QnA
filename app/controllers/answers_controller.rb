@@ -9,6 +9,10 @@ class AnswersController < ApplicationController
     answer.save
   end
 
+  def update
+    answer.update(answer_params) if current_user.author?(answer)
+  end
+
   def destroy
     answer.destroy if current_user.author?(answer)
 

@@ -1,5 +1,7 @@
 -if answer.persisted?
-  div
+  div id="answer-#{answer.id}"
     = answer.body
     - if current_user&.author?(answer)
-      = link_to 'Delete answer', answer_path(answer), method: :delete, data: {confirm: 'Are you sure?'}
+      p= link_to 'Edit', '#', class: 'edit-answer-link', data: { answer_id: answer.id }
+      p= link_to 'Delete answer', answer_path(answer), method: :delete, data: {confirm: 'Are you sure?'}
+      = render 'answers/update_form', answer: answer
