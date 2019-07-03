@@ -61,6 +61,7 @@ group :test do
   gem 'rails-controller-testing'
   gem 'capybara'
   gem 'webdrivers'
+  gem 'launchy'
 end
 
 
