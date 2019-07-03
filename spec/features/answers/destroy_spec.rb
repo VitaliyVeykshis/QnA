@@ -6,28 +6,30 @@ feature 'The user deletes answer', %q{
   I'd like to be able to delete the answer
 } do
   given(:user) { create(:user) }
-  given(:second_user) { create(:user) }
   given(:question) { create(:question, user: user) }
   given!(:answer) { create(:answer, question: question, user: user) }
 
-  scenario 'Answer author deletes answer' do
-    sign_in_as(user)
-    visit question_path(question)
+  describe 'Authenticated user', js: true do
+    background { sign_in_as(user) }
 
-    click_on 'Delete answer'
+    scenario 'deletes his answer' do
+      visit question_path(question)
 
-    expect(page).to have_current_path(question_path(question))
-    expect(page).to have_no_content answer.body
+      click_on 'Delete answer'
+      page.driver.browser.switch_to.alert.accept
+
+      expect(page).to have_current_path(question_path(question))
+      expect(page).to have_no_content answer.body
+    end
+
+    scenario "deletes other user's answer" do
+      visit question_path(create(:question, user: create(:user)))
+
+      expect(page).to have_no_link 'Delete answer'
+    end
   end
 
-  scenario 'Authenticated user deletes others answer' do
-    sign_in_as(second_user)
-    visit question_path(question)
-
-    expect(page).to have_no_link 'Delete answer'
-  end
-
-  scenario 'Unauthenticated user deletes question' do
+  scenario 'Unauthenticated user deletes answer', js: true do
     visit question_path(question)
 
     expect(page).to have_no_link 'Delete answer'
