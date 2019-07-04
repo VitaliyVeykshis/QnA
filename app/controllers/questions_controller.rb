@@ -1,8 +1,10 @@
 class QuestionsController < ApplicationController
-  before_action :authenticate_user!, except: [:index, :show]
-  expose :questions, ->{ Question.all }
+  before_action :authenticate_user!, except: %i[index show]
+
+  expose :questions, -> { Question.all }
   expose :question
-  expose :answer, ->{ question.answers.build }
+  expose :answer, -> { question.answers.build }
+  expose :answers_with_accepted_first, -> { question.answers.accepted_first }
 
   def create
     question.user = current_user

@@ -3,21 +3,22 @@ require 'rails_helper'
 RSpec.describe AnswersController, type: :controller do
   let(:user) { create(:user) }
   let(:question) { create(:question, user: user) }
+  let!(:answer) { create(:answer, question: question, user: user) }
 
   before { sign_in_as(user) }
 
   describe 'POST #create' do
     context 'with valid attributes' do
       it 'saves a new answer in the database' do
-        expect {
+        expect do
           post :create, params: { question_id: question, answer: attributes_for(:answer) }, format: :js
-        }.to change(question.answers, :count).by(1)
+        end.to change(question.answers, :count).by(1)
       end
 
       it 'links the new answer with author' do
-        expect {
+        expect do
           post :create, params: { question_id: question, answer: attributes_for(:answer) }, format: :js
-        }.to change(user.answers, :count).by(1)
+        end.to change(user.answers, :count).by(1)
       end
 
       it 'renders answer create template' do
@@ -29,9 +30,9 @@ RSpec.describe AnswersController, type: :controller do
 
     context 'with invalid attributes' do
       it 'does not save the answer' do
-        expect {
+        expect do
           post :create, params: { question_id: question, answer: attributes_for(:answer, :invalid) }, format: :js
-        }.not_to change(Answer, :count)
+        end.not_to change(Answer, :count)
       end
 
       it 'renders answer create template' do
@@ -43,8 +44,6 @@ RSpec.describe AnswersController, type: :controller do
   end
 
   describe 'DELETE #destroy' do
-    let!(:answer) { create(:answer, question: question, user: user) }
-
     context 'when author' do
       it 'deletes answer' do
         expect { delete :destroy, params: { id: answer }, format: :js }.to change(Answer, :count).by(-1)
@@ -74,8 +73,6 @@ RSpec.describe AnswersController, type: :controller do
   end
 
   describe 'PATCH #update' do
-    let!(:answer) { create(:answer, question: question, user: user) }
-
     context 'with valid attributes' do
       it 'changes answer attributes' do
         patch :update, params: { id: answer, answer: { body: 'new body' } }, format: :js
@@ -99,6 +96,24 @@ RSpec.describe AnswersController, type: :controller do
       it 'renders update view' do
         patch :update, params: { id: answer, answer: attributes_for(:answer, :invalid) }, format: :js
         expect(response).to render_template :update
+      end
+    end
+  end
+
+  describe 'PATCH #accept' do
+    context 'when question author' do
+      it 'accept answer' do
+        patch :accept, params: { id: answer }, format: :js
+        expect(question.accepted_answer).to eq answer
+      end
+    end
+
+    context 'when not author of question' do
+      before { sign_in_as(create(:user)) }
+
+      it 'accept answer' do
+        patch :accept, params: { id: answer }, format: :js
+        expect(question.accepted_answer).not_to eq answer
       end
     end
   end
