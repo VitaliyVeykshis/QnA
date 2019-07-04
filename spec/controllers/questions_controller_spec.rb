@@ -73,7 +73,7 @@ RSpec.describe QuestionsController, type: :controller do
   end
 
   describe 'PATCH #update' do
-    context 'with valid attributes' do
+    context 'when author with valid attributes' do
       it 'changes question attributes' do
         patch :update, params: { id: question, question: attributes_for(:question, :new) }, format: :js
         question.reload
@@ -87,7 +87,7 @@ RSpec.describe QuestionsController, type: :controller do
       end
     end
 
-    context 'with invalid attributes' do
+    context 'when author with invalid attributes' do
       it 'does not change question attributes' do
         expect do
           patch :update, params: { id: question, question: attributes_for(:question, :invalid) }, format: :js
@@ -99,6 +99,17 @@ RSpec.describe QuestionsController, type: :controller do
       it 'renders update view' do
         patch :update, params: { id: question, question: attributes_for(:question, :invalid) }, format: :js
         expect(response).to render_template :update
+      end
+    end
+
+    context 'when not author' do
+      before { sign_in_as(create(:user)) }
+
+      it 'does not change question attributes' do
+        patch :update, params: { id: question, question: attributes_for(:question, :new) }, format: :js
+        question.reload
+        expect(question.title).not_to eq 'New title'
+        expect(question.body).not_to eq 'New body'
       end
     end
   end
