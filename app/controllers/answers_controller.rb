@@ -1,12 +1,12 @@
 class AnswersController < ApplicationController
   before_action :authenticate_user!
 
-  expose :question
+  expose :answer
+  expose :question, find: -> { answer&.question || Question.find(params[:question_id]) }
   expose :answers, -> { question.answers }
-  expose :answer, build: -> { answers.new(answer_params) }
-  expose :answers_with_accepted_first, -> { answer.question.answers.accepted_first }
 
   def create
+    answers << answer
     answer.user = current_user
     answer.save
   end
