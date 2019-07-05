@@ -3,8 +3,8 @@ class QuestionsController < ApplicationController
 
   expose :questions, -> { Question.all }
   expose :question
-  expose :answer, -> { question.answers.build }
-  expose :answers_with_accepted_first, -> { question.answers.accepted_first }
+  expose :answers, -> { question.answers }
+  expose :answer, -> { answers.build }
 
   def create
     question.user = current_user
