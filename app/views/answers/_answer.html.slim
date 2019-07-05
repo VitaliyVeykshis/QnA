@@ -1,7 +1,7 @@
 -if answer.persisted?
-  . class=(answer.accepted ? 'accepted-answer' : 'sugested-answer') id="answer-#{answer.id}"
+  . class=(answer.accepted? ? 'accepted-answer' : 'sugested-answer') id="answer-#{answer.id}"
     = answer.body
-    - if current_user&.author?(answer.question) && !answer.accepted
+    - if current_user&.author?(answer.question) && !answer.accepted?
       p= link_to 'Best', accept_answer_path(answer), method: :patch, remote: true
     - if current_user&.author?(answer)
       p= link_to 'Edit', '#', class: 'edit-answer-link', data: { answer_id: answer.id }
