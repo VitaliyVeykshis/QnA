@@ -107,6 +107,11 @@ RSpec.describe AnswersController, type: :controller do
         answer.reload
         expect(answer.body).not_to eq 'new body'
       end
+
+      it 'renders update template' do
+        patch :update, params: { id: answer, answer: attributes_for(:answer, :invalid) }, format: :js
+        expect(response).to render_template :update
+      end
     end
   end
 
