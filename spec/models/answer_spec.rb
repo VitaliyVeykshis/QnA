@@ -5,6 +5,8 @@ RSpec.describe Answer, type: :model do
   let(:question) { create(:question, user: user) }
   let(:answers) { create_list(:answer, 3, question: question, user: user) }
 
+  before { answers[1].accept! }
+
   describe 'Associations' do
     it { should belong_to :question }
   end
@@ -15,17 +17,20 @@ RSpec.describe Answer, type: :model do
 
   describe '.accepted_first' do
     it 'returns answers list where accepted answer is first' do
-      answers[1].accept!
-
       expect(answers[1]).to eq question.answers.accepted_first[0]
     end
   end
 
   describe '#accept!' do
     it 'accept answer' do
-      answers[1].accept!
-
       expect(answers[1]).to be_accepted
+    end
+
+    it 'remove accept from old accepted answer' do
+      answers[2].accept!
+      answers[1].reload
+
+      expect(answers[1]).not_to be_accepted
     end
   end
 end
