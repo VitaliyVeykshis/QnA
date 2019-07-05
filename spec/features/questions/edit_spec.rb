@@ -14,15 +14,15 @@ feature 'User can edit his question', %q{
     expect(page).to have_no_link 'Edit'
   end
 
-  describe 'Authenticated user' do
+  describe 'Authenticated user', js: true do
     background do
       sign_in_as(user)
+
       visit question_path(question)
+      click_on 'Edit'
     end
 
-    scenario 'edits his question', js: true do
-      click_on 'Edit'
-
+    scenario 'edits his question' do
       within '.question' do
         fill_in 'Title', with: 'New question title'
         fill_in 'Body', with: 'New question body'
@@ -36,9 +36,7 @@ feature 'User can edit his question', %q{
       end
     end
 
-    scenario 'edits his question with errors', js: true do
-      click_on 'Edit'
-
+    scenario 'edits his question with errors' do
       within '.question' do
         fill_in 'Title', with: ''
         fill_in 'Body', with: ''
@@ -52,11 +50,24 @@ feature 'User can edit his question', %q{
       end
     end
 
-    scenario "tries to edit other user's answer", js: true do
+    scenario "tries to edit other user's answer" do
       visit question_path(create(:question, user: create(:user)))
 
       within '.question' do
         expect(page).to have_no_link 'Edit'
+      end
+    end
+
+    scenario 'during editing of a question can attach files' do
+      within '.question' do
+        fill_in 'Title', with: 'New question title'
+        fill_in 'Body', with: 'New question body'
+        attach_file 'File', [Rails.root.join('spec', 'rails_helper.rb'), Rails.root.join('spec', 'spec_helper.rb')]
+
+        click_on 'Save'
+
+        expect(page).to have_link 'rails_helper.rb'
+        expect(page).to have_link 'spec_helper.rb'
       end
     end
   end
