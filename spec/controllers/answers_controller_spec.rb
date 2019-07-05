@@ -80,7 +80,7 @@ RSpec.describe AnswersController, type: :controller do
         expect(answer.body).to eq 'new body'
       end
 
-      it 'renders update view' do
+      it 'renders update template' do
         patch :update, params: { id: answer, answer: { body: 'new body' } }, format: :js
         expect(response).to render_template :update
       end
@@ -93,7 +93,7 @@ RSpec.describe AnswersController, type: :controller do
         end.not_to change(answer, :body)
       end
 
-      it 'renders update view' do
+      it 'renders update template' do
         patch :update, params: { id: answer, answer: attributes_for(:answer, :invalid) }, format: :js
         expect(response).to render_template :update
       end
@@ -116,6 +116,11 @@ RSpec.describe AnswersController, type: :controller do
         patch :accept, params: { id: answer }, format: :js
         expect(question.accepted_answer).to eq answer
       end
+
+      it 'renders accept template' do
+        patch :accept, params: { id: answer }, format: :js
+        expect(response).to render_template :accept
+      end
     end
 
     context 'when not author of question' do
@@ -124,6 +129,11 @@ RSpec.describe AnswersController, type: :controller do
       it 'accept answer' do
         patch :accept, params: { id: answer }, format: :js
         expect(question.accepted_answer).not_to eq answer
+      end
+
+      it 'renders accept template' do
+        patch :accept, params: { id: answer }, format: :js
+        expect(response).to render_template :accept
       end
     end
   end
