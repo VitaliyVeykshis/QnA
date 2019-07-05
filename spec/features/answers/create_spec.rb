@@ -9,7 +9,7 @@ feature 'The user can write the answer to a question', %q{
   given(:user) { create(:user) }
   given(:question) { create(:question, user: user) }
 
-  scenario 'Authenticated user answer the question' do
+  scenario 'Authenticated user answer the question', js: true do
     sign_in_as(user)
 
     visit question_path(question)
@@ -20,7 +20,7 @@ feature 'The user can write the answer to a question', %q{
     expect(page).to have_content 'Answer body'
   end
 
-  scenario 'Authenticated user answer the question with errors' do
+  scenario 'Authenticated user answer the question with errors', js: true do
     sign_in_as(user)
 
     visit question_path(question)

@@ -1,0 +1,5 @@
+= form_with model: answer, class: 'hidden', html: { id: "edit-answer-#{ answer.id}" } do |f|
+    .answer-errors
+        = render 'shared/errors', resource: answer
+    = f.text_area :body, placeholder: answer.body
+    = f.submit 'Save'

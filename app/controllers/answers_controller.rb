@@ -1,23 +1,26 @@
 class AnswersController < ApplicationController
   before_action :authenticate_user!
-  expose :question
-  expose :answers, ->{ question.answers }
-  expose :answer, build: ->{ answers.new(answer_params) }
+
+  expose :answer
+  expose :question, find: -> { answer&.question || Question.find(params[:question_id]) }
+  expose :answers, -> { question.answers }
 
   def create
+    answers << answer
     answer.user = current_user
+    answer.save
+  end
 
-    if answer.save
-      redirect_to answer.question
-    else
-      render 'questions/show'
-    end
+  def update
+    answer.update(answer_params) if current_user.author?(answer)
   end
 
   def destroy
     answer.destroy if current_user.author?(answer)
+  end
 
-    redirect_to answer.question
+  def accept
+    answer.accept! if current_user.author?(answer.question)
   end
 
   private
