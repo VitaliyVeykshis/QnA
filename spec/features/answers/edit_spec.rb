@@ -5,8 +5,8 @@ feature 'User can edit his answer', %q{
   As an author of answer
   I'd like to be able to edit my answer
 } do
-  given!(:user) { create(:user) }
-  given!(:question) { create(:question, user: user) }
+  given(:user) { create(:user) }
+  given(:question) { create(:question, user: user) }
   given!(:answer) { create(:answer, question: question, user: user) }
 
   scenario 'Unauthenticated user can not edit answer' do
@@ -18,7 +18,6 @@ feature 'User can edit his answer', %q{
   describe 'Authenticated user', js: true do
     background do
       sign_in_as(user)
-
       visit question_path(question)
     end
 
@@ -59,17 +58,19 @@ feature 'User can edit his answer', %q{
       end
     end
 
-    scenario 'during editing of an answer can attach files' do
-      within '.answers' do
-        click_on 'Edit'
+    context 'with attachments' do
+      scenario 'during editing of an answer can attach files' do
+        within '.answers' do
+          click_on 'Edit'
 
-        fill_in 'answer_body', with: 'edited answer'
-        attach_file 'File', [Rails.root.join('spec', 'rails_helper.rb'), Rails.root.join('spec', 'spec_helper.rb')]
+          fill_in 'answer_body', with: 'edited answer'
+          attach_file 'File', [Rails.root.join('spec', 'rails_helper.rb'), Rails.root.join('spec', 'spec_helper.rb')]
 
-        click_on 'Save'
+          click_on 'Save'
 
-        expect(page).to have_link 'rails_helper.rb'
-        expect(page).to have_link 'spec_helper.rb'
+          expect(page).to have_link 'rails_helper.rb'
+          expect(page).to have_link 'spec_helper.rb'
+        end
       end
     end
   end

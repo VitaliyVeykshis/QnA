@@ -7,4 +7,8 @@ Rails.application.routes.draw do
       patch :accept, on: :member
     end
   end
+
+  scope :active_storage, module: :active_storage, as: :active_storage do
+    resources :attachments, only: [:destroy]
+  end
 end
