@@ -3,5 +3,5 @@
         = render 'shared/errors', resource: answer
     = f.text_area :body, placeholder: answer.body
     = f.label :files
-    = f.file_field :files, multiple: true
+    = f.file_field :files, multiple: true, direct_upload: true
     = f.submit 'Save'
