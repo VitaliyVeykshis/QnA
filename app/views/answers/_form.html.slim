@@ -2,4 +2,6 @@
   .answer-errors
       = render 'shared/errors', resource: answer
   = f.text_area :body, placeholder: 'Answer'
+  = f.label :files
+  = f.file_field :files, multiple: true, direct_upload: true
   = f.submit 'Post'

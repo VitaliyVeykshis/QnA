@@ -7,31 +7,40 @@ feature 'User can create question', %q{
 } do
   given(:user) { create(:user) }
 
-  scenario 'Authenticated user ask a question' do
-    sign_in_as(user)
+  describe 'Authenticated user' do
+    background do
+      sign_in_as(user)
 
-    visit questions_path
+      visit questions_path
+      click_on 'Ask question'
+    end
 
-    click_on 'Ask question'
+    scenario 'asks a question' do
+      fill_in 'Title', with: 'Test question'
+      fill_in 'Body', with: 'text text text'
+      click_on 'Ask'
 
-    fill_in 'Title', with: 'Test question'
-    fill_in 'Body', with: 'text text text'
-    click_on 'Ask'
+      expect(page).to have_content 'Your question successfully created.'
+      expect(page).to have_content 'Test question'
+      expect(page).to have_content 'text text text'
+    end
 
-    expect(page).to have_content 'Your question successfully created.'
-    expect(page).to have_content 'Test question'
-    expect(page).to have_content 'text text text'
-  end
+    scenario 'asks a question with errors' do
+      click_on 'Ask'
 
-  scenario 'Authenticated user asks a question with errors' do
-    sign_in_as(user)
+      expect(page).to have_content "Title can't be blank"
+    end
 
-    visit questions_path
+    scenario 'asks a question with attached files' do
+      fill_in 'Title', with: 'Test question'
+      fill_in 'Body', with: 'text text text'
 
-    click_on 'Ask question'
-    click_on 'Ask'
+      attach_file 'File', [Rails.root.join('spec', 'rails_helper.rb'), Rails.root.join('spec', 'spec_helper.rb')]
+      click_on 'Ask'
 
-    expect(page).to have_content "Title can't be blank"
+      expect(page).to have_link 'rails_helper.rb'
+      expect(page).to have_link 'spec_helper.rb'
+    end
   end
 
   scenario 'Unauthenticated user tries to ask a question' do

@@ -5,8 +5,8 @@ feature 'User can edit his answer', %q{
   As an author of answer
   I'd like to be able to edit my answer
 } do
-  given!(:user) { create(:user) }
-  given!(:question) { create(:question, user: user) }
+  given(:user) { create(:user) }
+  given(:question) { create(:question, user: user) }
   given!(:answer) { create(:answer, question: question, user: user) }
 
   scenario 'Unauthenticated user can not edit answer' do
@@ -15,12 +15,13 @@ feature 'User can edit his answer', %q{
     expect(page).to have_no_link 'Edit'
   end
 
-  describe 'Authenticated user' do
-    background { sign_in_as(user) }
-
-    scenario 'edits his answer', js: true do
+  describe 'Authenticated user', js: true do
+    background do
+      sign_in_as(user)
       visit question_path(question)
+    end
 
+    scenario 'edits his answer' do
       within '.answers' do
         click_on 'Edit'
 
@@ -33,9 +34,7 @@ feature 'User can edit his answer', %q{
       end
     end
 
-    scenario 'edits his answer with errors', js: true do
-      visit question_path(question)
-
+    scenario 'edits his answer with errors' do
       within '.answers' do
         click_on 'Edit'
 
@@ -48,7 +47,7 @@ feature 'User can edit his answer', %q{
       end
     end
 
-    scenario "tries to edit other user's answer", js: true do
+    scenario "tries to edit other user's answer" do
       question = create(:question, user: user)
       create(:answer, user: create(:user), question: question)
 
@@ -56,6 +55,22 @@ feature 'User can edit his answer', %q{
 
       within '.answers' do
         expect(page).to have_no_link 'Edit'
+      end
+    end
+
+    context 'with attachments' do
+      scenario 'during editing of an answer can attach files' do
+        within '.answers' do
+          click_on 'Edit'
+
+          fill_in 'answer_body', with: 'edited answer'
+          attach_file 'File', [Rails.root.join('spec', 'rails_helper.rb'), Rails.root.join('spec', 'spec_helper.rb')]
+
+          click_on 'Save'
+
+          expect(page).to have_link 'rails_helper.rb'
+          expect(page).to have_link 'spec_helper.rb'
+        end
       end
     end
   end

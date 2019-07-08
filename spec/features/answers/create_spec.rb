@@ -9,25 +9,35 @@ feature 'The user can write the answer to a question', %q{
   given(:user) { create(:user) }
   given(:question) { create(:question, user: user) }
 
-  scenario 'Authenticated user answer the question', js: true do
-    sign_in_as(user)
+  describe 'Authenticated user', js: true do
+    background do
+      sign_in_as(user)
 
-    visit question_path(question)
+      visit question_path(question)
+    end
 
-    fill_in 'Answer', with: 'Answer body'
-    click_on 'Post'
+    scenario 'answer the question' do
+      fill_in 'Answer', with: 'Answer body'
+      click_on 'Post'
 
-    expect(page).to have_content 'Answer body'
-  end
+      expect(page).to have_content 'Answer body'
+    end
 
-  scenario 'Authenticated user answer the question with errors', js: true do
-    sign_in_as(user)
+    scenario 'answer the question with errors' do
+      click_on 'Post'
 
-    visit question_path(question)
+      expect(page).to have_content "Body can't be blank"
+    end
 
-    click_on 'Post'
+    scenario 'answer a question with attached files' do
+      fill_in 'Answer', with: 'Answer body'
 
-    expect(page).to have_content "Body can't be blank"
+      attach_file 'File', [Rails.root.join('spec', 'rails_helper.rb'), Rails.root.join('spec', 'spec_helper.rb')]
+      click_on 'Post'
+
+      expect(page).to have_link 'rails_helper.rb'
+      expect(page).to have_link 'spec_helper.rb'
+    end
   end
 
   scenario 'Unauthenticated user tries to answer the question' do

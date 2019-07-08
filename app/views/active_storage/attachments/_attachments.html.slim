@@ -1,0 +1,4 @@
+.attachments
+  - if resource.files.attached?
+    - resource.files.each do |file|
+      = render 'active_storage/attachments/attachment', file: file

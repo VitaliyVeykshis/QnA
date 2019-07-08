@@ -1,6 +1,7 @@
 -if answer.persisted?
   . class=(answer.accepted? ? 'accepted-answer' : 'sugested-answer') id="answer-#{answer.id}"
     = answer.body
+    = render 'active_storage/attachments/attachments', resource: answer
     - if current_user&.author?(answer.question) && !answer.accepted?
       p= link_to 'Best', accept_answer_path(answer), method: :patch, remote: true
     - if current_user&.author?(answer)
