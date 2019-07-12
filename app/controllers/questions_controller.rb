@@ -6,6 +6,9 @@ class QuestionsController < ApplicationController
   expose :answers, -> { question.answers }
   expose :answer, -> { answers.build }
 
+  before_action -> { question.links.build }, only: :new
+  before_action -> { answer.links.build }, only: :show
+
   def create
     question.user = current_user
 
@@ -32,6 +35,9 @@ class QuestionsController < ApplicationController
   private
 
   def question_params
-    params.require(:question).permit(:title, :body, files: [])
+    params.require(:question).permit(:title,
+                                     :body,
+                                     files: [],
+                                     links_attributes: %i[name url])
   end
 end
