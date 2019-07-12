@@ -1,14 +1,14 @@
-= render 'shared/errors', resource: question
-
 = form_with model: question do |f|
-  = f.label :title
-  = f.text_field :title
-  = f.label :body
-  = f.text_area :body
-  = f.label :files
-  = f.file_field :files, multiple: true, direct_upload: true
-  p Links:
-  p = f.fields_for :links do |l|
-    .links
-      = link_to_add_association 'Add link', f, :links, partial: 'links/link_fields'
-  = f.submit 'Ask'
+    .question-errors
+        = render 'shared/errors', resource: question
+    = f.label :title
+    = f.text_field :title
+    = f.label :body
+    = f.text_area :body
+    = f.label :files
+    = f.file_field :files, multiple: true, direct_upload: true
+    p Links:
+    p = f.fields_for :links do |l|
+      .links
+        = link_to_add_association 'Add link', f, :links, partial: 'links/link_fields'
+    = f.submit 'Ask'
