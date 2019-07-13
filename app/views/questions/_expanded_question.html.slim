@@ -6,3 +6,4 @@ p= question.body
   p= link_to 'Delete question', question_path(question), method: :delete, data: {confirm: 'Are you sure?'}
   = render 'update_form', question: question
 = render 'links/index', resource: question
+= render 'badges/badge', badge: question.badge

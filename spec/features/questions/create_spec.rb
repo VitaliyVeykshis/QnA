@@ -41,6 +41,21 @@ feature 'User can create question', %q{
       expect(page).to have_link 'rails_helper.rb'
       expect(page).to have_link 'spec_helper.rb'
     end
+
+    scenario 'creates a question with badge' do
+      fill_in 'Title', with: 'Test question'
+      fill_in 'Body', with: 'text text text'
+
+      fill_in 'Badge title', with: 'Awesome badge'
+      attach_file 'Badge image', Rails.root.join('tmp', 'images', 'badge.png')
+
+      click_on 'Ask'
+
+      within '.question' do
+        expect(page).to have_content 'Awesome badge'
+        expect(page).to have_css "img[src*='badge']"
+      end
+    end
   end
 
   scenario 'Unauthenticated user tries to ask a question' do

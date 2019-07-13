@@ -1,5 +1,6 @@
 class QuestionsController < ApplicationController
   before_action :authenticate_user!, except: %i[index show]
+  before_action -> { question.badge = Badge.new }, only: :new
 
   expose :questions, -> { Question.all }
   expose :question, scope: -> { Question.with_attached_files }
@@ -35,6 +36,7 @@ class QuestionsController < ApplicationController
     params.require(:question).permit(:title,
                                      :body,
                                      files: [],
-                                     links_attributes: %i[name url])
+                                     links_attributes: %i[name url],
+                                     badge_attributes: %i[title image])
   end
 end
