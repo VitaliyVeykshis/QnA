@@ -5,7 +5,7 @@ RSpec.describe Link, type: :model do
   let(:question) { create(:question, user: user) }
   let(:link) { build(:link, linkable: question) }
 
-  describe 'Assiciations' do
+  describe 'Associations' do
     it { should belong_to :linkable }
   end
 
@@ -25,6 +25,26 @@ RSpec.describe Link, type: :model do
         link.url = invalid_url
         expect(link).to be_invalid
       end
+    end
+  end
+
+  describe '#gist?' do
+    let(:gist) { create(:link, :gist, linkable: question) }
+
+    it 'returns true when link is a gist' do
+      expect(gist).to be_gist
+    end
+
+    it 'returns false when link is not a gist' do
+      expect(link).not_to be_gist
+    end
+  end
+
+  describe '#gist_files' do
+    let(:gist) { create(:link, :gist, linkable: question) }
+
+    it 'returns gist files' do
+      expect(gist.gist_files.first).to include(content: 'gist text')
     end
   end
 end

@@ -49,4 +49,14 @@ feature 'User can add links to answer', %q{
     expect(page).to have_no_link 'My gist', href: invalid_gist_url
     expect(page).to have_content 'Links url is invalid'
   end
+
+  scenario 'User adds gist link when answer', js: true do
+    fill_in 'Link name', with: 'My gist'
+    fill_in 'Url', with: gist_url
+
+    click_on 'Post'
+
+    expect(page).to have_link 'My gist', href: gist_url
+    expect(page).to have_content 'gist text'
+  end
 end

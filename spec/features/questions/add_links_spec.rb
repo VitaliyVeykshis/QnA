@@ -18,6 +18,7 @@ feature 'User can add links to question', %q{
     fill_in 'Body', with: 'Question body'
     click_on 'Add link'
   end
+
   scenario 'User adds links when asks question', js: true do
     within all('.nested-fields')[0] do
       fill_in 'Link name', with: 'My gist'
@@ -45,5 +46,15 @@ feature 'User can add links to question', %q{
 
     expect(page).to have_no_link 'My gist', href: invalid_gist_url
     expect(page).to have_content 'Links url is invalid'
+  end
+
+  scenario 'User adds gist link when asks question', js: true do
+    fill_in 'Link name', with: 'My gist'
+    fill_in 'Url', with: gist_url
+
+    click_on 'Ask'
+
+    expect(page).to have_link 'My gist', href: gist_url
+    expect(page).to have_content 'gist text'
   end
 end
