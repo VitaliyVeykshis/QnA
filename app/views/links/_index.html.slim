@@ -2,13 +2,14 @@
   p Links:
   ul
     - resource.links.each do |link|
-      li id="link-#{link.id}"
-        = link_to link.name, link.url
-        - if current_user&.author?(resource)
-          = link_to 'Remove', link_path(link), method: :delete, data: { confirm: 'Are you sure?', remote: true }
-        - if link.gist?
-          .gists
-            - link.gist_files.each do |gist|
-              .gist
-                p= gist[:filename]
-                p= gist[:content]
+      - if link.valid?
+        li id="link-#{link.id}"
+          = link_to link.name, link.url
+          - if current_user&.author?(resource)
+            = link_to 'Remove', link_path(link), method: :delete, data: { confirm: 'Are you sure?', remote: true }
+          - if link.gist?
+            .gists
+              - link.gist_files.each do |gist|
+                .gist
+                  p= gist[:filename]
+                  p= gist[:content]

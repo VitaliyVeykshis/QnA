@@ -6,9 +6,6 @@ class QuestionsController < ApplicationController
   expose :answers, -> { question.answers }
   expose :answer, -> { answers.build }
 
-  before_action -> { question.links.build }, only: :new
-  before_action -> { answer.links.build }, only: :show
-
   def create
     question.user = current_user
 

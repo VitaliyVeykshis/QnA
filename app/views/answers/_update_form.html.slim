@@ -1,7 +1,8 @@
 = form_with model: answer, class: 'hidden', html: { id: "edit-answer-#{ answer.id}" } do |f|
-    .answer-errors
-        = render 'shared/errors', resource: answer
-    = f.text_area :body, placeholder: answer.body
-    = f.label :files
-    = f.file_field :files, multiple: true, direct_upload: true
-    = f.submit 'Save'
+  .answer-errors
+      = render 'shared/errors', resource: answer
+  = f.text_area :body, placeholder: answer.body
+  = f.label :files
+  = f.file_field :files, multiple: true, direct_upload: true
+  = render 'links/new' ,resource: answer, f: f
+  = f.submit 'Save'

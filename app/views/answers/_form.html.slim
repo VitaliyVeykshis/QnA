@@ -4,8 +4,5 @@
   = f.text_area :body, placeholder: 'Answer'
   = f.label :files
   = f.file_field :files, multiple: true, direct_upload: true
-  p Links:
-  p = f.fields_for :links do |l|
-    .new-links
-      = link_to_add_association 'Add link', f, :links, partial: 'links/link_fields'
+  = render 'links/new' ,resource: answer, f: f
   = f.submit 'Post'

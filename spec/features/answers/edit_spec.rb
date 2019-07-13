@@ -73,5 +73,21 @@ feature 'User can edit his answer', %q{
         end
       end
     end
+
+    scenario 'adds link when edit answer' do
+      url = 'https://www.google.com'
+
+      within '.answers' do
+        click_on 'Edit'
+        click_on 'Add link'
+
+        fill_in 'Link name', with: 'My url'
+        fill_in 'Url', with: url
+
+        click_on 'Save'
+
+        expect(page).to have_link 'My url', href: url
+      end
+    end
   end
 end

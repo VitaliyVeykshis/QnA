@@ -70,5 +70,20 @@ feature 'User can edit his question', %q{
         expect(page).to have_link 'spec_helper.rb'
       end
     end
+
+    scenario 'adds link when edit question' do
+      url = 'https://www.google.com'
+
+      within '.question' do
+        click_on 'Add link'
+
+        fill_in 'Link name', with: 'My url'
+        fill_in 'Url', with: url
+
+        click_on 'Save'
+
+        expect(page).to have_link 'My url', href: url
+      end
+    end
   end
 end
