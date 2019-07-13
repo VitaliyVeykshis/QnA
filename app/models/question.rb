@@ -1,8 +1,8 @@
 class Question < ApplicationRecord
+  belongs_to :user
   has_many :answers, dependent: :destroy
   has_many :links, dependent: :destroy, as: :linkable
-  has_one :badge, dependent: :destroy, as: :badgeable
-  belongs_to :user
+  has_one :badge, dependent: :destroy
 
   has_many_attached :files
 

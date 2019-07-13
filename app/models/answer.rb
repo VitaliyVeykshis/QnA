@@ -15,6 +15,7 @@ class Answer < ApplicationRecord
     transaction do
       question.answers.find_by(accepted: true)&.update!(accepted: false)
       update!(accepted: true)
+      question.badge&.update!(user: user)
     end
   end
 end
