@@ -1,5 +1,6 @@
 .badge
   - if badge.present?
       p Badge:
-      = badge.title
-      = image_tag(url_for(badge.image), size: 50)
+      p = badge.question.title
+      p = image_tag(url_for(badge.image), size: 50)
+      p = badge.title

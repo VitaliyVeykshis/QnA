@@ -8,7 +8,4 @@
       p= link_to 'Edit', '#', class: 'edit-answer-link', data: { answer_id: answer.id }
       p= link_to 'Delete answer', answer_path(answer), method: :delete, data: { confirm: 'Are you sure?', remote: true }
       = render 'answers/update_form', answer: answer
-    - if answer.accepted? && answer.question.badge.present?
-      .badge
-        = image_tag(url_for(answer.question.badge.image), size: 50)
     = render 'links/index', resource: answer

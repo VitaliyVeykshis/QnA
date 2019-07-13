@@ -47,9 +47,13 @@ feature 'User can accept best answer for his question', %q{
 
       within "#answer-#{answers[1].id}" do
         click_on 'Best'
-
-        expect(page).to have_css "img[src*='badge.png']"
       end
+
+      visit badges_index_path
+
+      expect(page).to have_content(badge.title)
+      expect(page).to have_content(badge.question.title)
+      expect(page).to have_css "img[src*='#{badge.image.filename}']"
     end
   end
 
