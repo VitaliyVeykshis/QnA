@@ -35,14 +35,21 @@ gem 'jbuilder', '~> 2.5'
 
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '>= 1.1.0', require: false
+# Templating
 gem 'slim-rails'
+# Chore
 gem 'decent_exposure', '3.0.0'
-gem 'devise'
-gem 'jquery-rails'
-gem "aws-sdk-s3", require: false
-gem 'cocoon'
 gem 'interactor'
+# Authentication
+gem 'devise'
+# Third party
+gem "aws-sdk-s3", require: false
 gem 'octokit', '~> 4.0'
+# UI
+gem 'bootstrap', '~> 4.3.1'
+gem 'jquery-rails'
+# Nested forms
+gem 'cocoon'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
