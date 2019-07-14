@@ -7,6 +7,7 @@ feature 'User can accept best answer for his question', %q{
   given(:user) { create(:user) }
   given!(:question) { create(:question, user: user) }
   given!(:answers) { create_list(:answer, 3, question: question, user: user) }
+  given!(:badge) { create(:badge, question: question) }
 
   describe 'Authenticated user', js: true do
     scenario 'accept answer' do
@@ -38,6 +39,21 @@ feature 'User can accept best answer for his question', %q{
       within '.answers' do
         expect(page).to have_no_link 'Best'
       end
+    end
+
+    scenario 'question badge is giwen to answer author' do
+      sign_in_as(user)
+      visit question_path(question)
+
+      within "#answer-#{answers[1].id}" do
+        click_on 'Best'
+      end
+
+      visit badges_index_path
+
+      expect(page).to have_content(badge.title)
+      expect(page).to have_content(badge.question.title)
+      expect(page).to have_css "img[src*='#{badge.image.filename}']"
     end
   end
 

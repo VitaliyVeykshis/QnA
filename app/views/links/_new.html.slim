@@ -1,0 +1,4 @@
+p Links:
+p = f.fields_for :links, resource.links.build do |l|
+  .links
+    = link_to_add_association 'Add link', f, :links, partial: 'links/link_fields'

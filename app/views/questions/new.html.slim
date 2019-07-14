@@ -1,11 +1,19 @@
-= render 'shared/errors', resource: question
-
 = form_with model: question do |f|
-  = f.label :title
-  = f.text_field :title
-  = f.label :body
-  = f.text_area :body
-  = f.label :files
-  = f.file_field :files, multiple: true, direct_upload: true
-
-  = f.submit 'Ask'
+    .question-errors
+        = render 'shared/errors', resource: question
+    = f.label :title
+    = f.text_field :title
+    = f.label :body
+    = f.text_area :body
+    = f.fields_for :badge do |b|
+      p Badge:
+      p
+        = b.label :title, 'Badge title'
+        = b.text_field :title
+      p
+        = b.label :image, 'Badge image'
+        = b.file_field :image, direct_upload: true
+    = f.label :files
+    = f.file_field :files, multiple: true, direct_upload: true
+    = render 'links/new' ,resource: question, f: f
+    = f.submit 'Ask'

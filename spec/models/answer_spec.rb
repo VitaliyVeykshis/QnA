@@ -2,13 +2,15 @@ require 'rails_helper'
 
 RSpec.describe Answer, type: :model do
   let(:user) { create(:user) }
-  let(:question) { create(:question, user: user) }
-  let(:answers) { create_list(:answer, 3, question: question, user: user) }
+  let!(:question) { create(:question, user: user) }
+  let!(:badge) { create(:badge, question: question) }
+  let!(:answers) { create_list(:answer, 3, question: question, user: user) }
 
   before { answers[1].accept! }
 
   describe 'Associations' do
     it { should belong_to :question }
+    it { should have_many(:links).dependent(:destroy) }
   end
 
   describe 'Attachment association' do
@@ -16,6 +18,8 @@ RSpec.describe Answer, type: :model do
       expect(Answer.new.files).to be_an_instance_of(ActiveStorage::Attached::Many)
     end
   end
+
+  it { should accept_nested_attributes_for :links }
 
   describe 'Validations' do
     it { should validate_presence_of :body }
@@ -37,6 +41,13 @@ RSpec.describe Answer, type: :model do
       answers[1].reload
 
       expect(answers[1]).not_to be_accepted
+    end
+
+    it 'give badge to accepted answer author' do
+      answers[2].accept!
+      user.reload
+
+      expect(user.badges.first).to eq badge
     end
   end
 end
