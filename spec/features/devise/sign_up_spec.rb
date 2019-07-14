@@ -10,7 +10,9 @@ feature 'User can sign up', %q{
     fill_in 'Password', with: '12345678'
     fill_in 'Password confirmation', with: '12345678'
 
-    click_on 'Sign up'
+    within '.new_user' do
+      click_on 'Sign up'
+    end
 
     expect(page).to have_content 'Welcome! You have signed up successfully.'
   end
