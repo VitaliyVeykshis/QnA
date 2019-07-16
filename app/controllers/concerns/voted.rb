@@ -6,13 +6,13 @@ module Voted
   end
 
   def vote_up
-    resource.vote_up(current_user)
+    resource.vote_up(current_user) unless current_user.author?(resource)
 
     render_json
   end
 
   def vote_down
-    resource.vote_down(current_user)
+    resource.vote_down(current_user) unless current_user.author?(resource)
 
     render_json
   end

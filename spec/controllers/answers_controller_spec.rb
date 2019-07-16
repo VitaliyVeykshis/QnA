@@ -144,7 +144,8 @@ RSpec.describe AnswersController, type: :controller do
   end
 
   describe 'Concerns' do
-    let(:resource) { create(:answer, question: question, user: user) }
+    let(:author_resource) { create(:answer, question: question, user: user) }
+    let(:not_author_resource) { create(:answer, question: question, user: create(:user)) }
 
     it_behaves_like 'voted'
   end

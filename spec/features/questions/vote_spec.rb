@@ -2,14 +2,15 @@ require 'rails_helper'
 
 feature 'The user estimates the question', %q{
   As an authenticated user
+  Except question author
   I'd like to be able to estimate question
 } do
   given(:user) { create(:user) }
   given!(:question) { create(:question, user: user) }
 
-  describe 'Authenticated user', js: true do
+  describe 'Not author of question', js: true do
     background do
-      sign_in_as(user)
+      sign_in_as(create(:user))
       visit question_path(question)
     end
 
@@ -24,6 +25,22 @@ feature 'The user estimates the question', %q{
       within '.question' do
         click_on 'Dislike'
         expect(page).to have_content 'Rating: -1'
+      end
+    end
+  end
+
+  describe 'Author of question' do
+    background do
+      sign_in_as(user)
+      visit question_path(question)
+    end
+
+    scenario 'tries to estimate question' do
+      visit question_path(question)
+
+      within '.question' do
+        expect(page).to have_no_link 'Like'
+        expect(page).to have_no_link 'Dislike'
       end
     end
   end

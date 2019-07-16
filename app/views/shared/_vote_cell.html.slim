@@ -1,5 +1,5 @@
 .vote-cell
-  - if current_user
+  - if current_user && !current_user&.author?(resource)
     .vote-up
       = link_to 'Like', polymorphic_path(resource, action: :vote_up), method: :post, remote: true
     .vote-down
