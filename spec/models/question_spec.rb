@@ -32,4 +32,10 @@ RSpec.describe Question, type: :model do
       expect(question.accepted_answer).to eq answers[1]
     end
   end
+
+  describe 'Concerns' do
+    let(:resource) { create(:question, user: user) }
+
+    it_behaves_like 'votable'
+  end
 end

@@ -113,4 +113,10 @@ RSpec.describe QuestionsController, type: :controller do
       end
     end
   end
+
+  describe 'Concerns' do
+    let(:resource) { create(:question, user: user) }
+
+    it_behaves_like 'voted'
+  end
 end

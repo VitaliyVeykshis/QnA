@@ -9,3 +9,4 @@
       p= link_to 'Delete answer', answer_path(answer), method: :delete, data: { confirm: 'Are you sure?', remote: true }
       = render 'answers/update_form', answer: answer
     = render 'links/index', resource: answer
+    = render 'shared/vote_cell', resource: answer

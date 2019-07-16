@@ -4,8 +4,15 @@ Rails.application.routes.draw do
 
   get 'badges/index'
 
-  resources :questions, shallow: true do
-    resources :answers, only: %i[create update destroy] do
+  concern :votable do
+    member do
+      post :vote_up
+      post :vote_down
+    end
+  end
+
+  resources :questions, concerns: %i[votable], shallow: true do
+    resources :answers, only: %i[create update destroy], concerns: %i[votable] do
       patch :accept, on: :member
     end
   end
