@@ -13,6 +13,13 @@ shared_examples_for 'votable' do
     it "accepts user's vote" do
       expect { resource.vote_up(user) }.to change(resource.votes, :count).by(1)
     end
+
+    it 'has one up vote if the vote has not changed' do
+      resource.vote_up(user)
+      resource.vote_up(user)
+
+      expect(resource.rating).to eq(1)
+    end
   end
 
   describe '#vote_down' do
@@ -24,6 +31,13 @@ shared_examples_for 'votable' do
 
     it "accepts user's vote" do
       expect { resource.vote_down(user) }.to change(resource.votes, :count).by(1)
+    end
+
+    it 'has one down vote if the vote has not changed' do
+      resource.vote_down(user)
+      resource.vote_down(user)
+
+      expect(resource.rating).to eq(-1)
     end
   end
 

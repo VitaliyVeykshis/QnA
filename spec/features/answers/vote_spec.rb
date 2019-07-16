@@ -28,6 +28,15 @@ feature 'The user estimates the answer', %q{
         expect(page).to have_content 'Rating: -1'
       end
     end
+
+    scenario 'cannot vote 2 times in a row' do
+      within '.answers' do
+        click_on 'Like'
+        click_on 'Like'
+        sleep 1
+        expect(page).to have_content 'Rating: 1'
+      end
+    end
   end
 
   describe 'Author of answer' do
