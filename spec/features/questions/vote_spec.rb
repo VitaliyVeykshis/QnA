@@ -28,12 +28,12 @@ feature 'The user estimates the question', %q{
       end
     end
 
-    scenario 'cannot vote 2 times in a row' do
+    scenario 'cancel the decision' do
       within '.question' do
         click_on 'Like'
         click_on 'Like'
         sleep 1
-        expect(page).to have_content 'Rating: 1'
+        expect(page).to have_content 'Rating: 0'
       end
     end
   end

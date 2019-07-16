@@ -14,8 +14,22 @@ shared_examples_for 'votable' do
       expect { resource.vote_up(user) }.to change(resource.votes, :count).by(1)
     end
 
-    it 'has one up vote if the vote has not changed' do
+    it 'unvote if vote has not changed' do
       resource.vote_up(user)
+      resource.vote_up(user)
+
+      expect(resource.rating).to eq(0)
+    end
+
+    it 'unvote if vote has not changed' do
+      resource.vote_up(user)
+      resource.vote_up(user)
+
+      expect(resource.rating).to eq(0)
+    end
+
+    it 'votes up if vote has changed' do
+      resource.vote_down(user)
       resource.vote_up(user)
 
       expect(resource.rating).to eq(1)
@@ -33,8 +47,15 @@ shared_examples_for 'votable' do
       expect { resource.vote_down(user) }.to change(resource.votes, :count).by(1)
     end
 
-    it 'has one down vote if the vote has not changed' do
+    it 'unvote if vote has not changed' do
       resource.vote_down(user)
+      resource.vote_down(user)
+
+      expect(resource.rating).to eq(0)
+    end
+
+    it 'votes down if vote has changed' do
+      resource.vote_up(user)
       resource.vote_down(user)
 
       expect(resource.rating).to eq(-1)
