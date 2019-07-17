@@ -21,13 +21,6 @@ shared_examples_for 'votable' do
       expect(resource.rating).to eq(0)
     end
 
-    it 'unvote if vote has not changed' do
-      resource.vote_up(user)
-      resource.vote_up(user)
-
-      expect(resource.rating).to eq(0)
-    end
-
     it 'votes up if vote has changed' do
       resource.vote_down(user)
       resource.vote_up(user)
