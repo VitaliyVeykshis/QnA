@@ -23,7 +23,9 @@ module Voted
     render json: {
       rating: resource.rating,
       resource_class: resource.class.to_s,
-      resource_id: resource.id
+      resource_id: resource.id,
+      voted_up_on: current_user.voted_up_on?(resource),
+      voted_down_on: current_user.voted_down_on?(resource)
     }
   end
 end
