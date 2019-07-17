@@ -48,6 +48,7 @@ gem 'octokit', '~> 4.0'
 # UI
 gem 'bootstrap', '~> 4.3.1'
 gem 'jquery-rails'
+gem 'font-awesome-rails'
 # Nested forms
 gem 'cocoon'
 

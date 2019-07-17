@@ -112,6 +112,8 @@ GEM
     faraday (0.15.4)
       multipart-post (>= 1.2, < 3)
     ffi (1.11.1)
+    font-awesome-rails (4.7.0.5)
+      railties (>= 3.2, < 6.1)
     globalid (0.4.2)
       activesupport (>= 4.2.0)
     i18n (1.6.0)
@@ -300,6 +302,7 @@ DEPENDENCIES
   decent_exposure (= 3.0.0)
   devise
   factory_bot_rails
+  font-awesome-rails
   interactor
   jbuilder (~> 2.5)
   jquery-rails
