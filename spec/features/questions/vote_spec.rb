@@ -16,22 +16,22 @@ feature 'The user estimates the question', %q{
 
     scenario 'likes question' do
       within '.question' do
-        click_on 'Like'
+        click_on 'like'
         expect(page).to have_content 'Rating: 1'
       end
     end
 
     scenario 'dislikes question' do
       within '.question' do
-        click_on 'Dislike'
+        click_on 'dislike'
         expect(page).to have_content 'Rating: -1'
       end
     end
 
     scenario 'cancel the decision' do
       within '.question' do
-        click_on 'Like'
-        click_on 'Like'
+        click_on 'like'
+        click_on 'like'
         sleep 1
         expect(page).to have_content 'Rating: 0'
       end
@@ -48,8 +48,8 @@ feature 'The user estimates the question', %q{
       visit question_path(question)
 
       within '.question' do
-        expect(page).to have_no_link 'Like'
-        expect(page).to have_no_link 'Dislike'
+        expect(page).to have_no_link 'like'
+        expect(page).to have_no_link 'dislike'
       end
     end
   end
@@ -59,8 +59,8 @@ feature 'The user estimates the question', %q{
       visit question_path(question)
 
       within '.question' do
-        expect(page).to have_no_link 'Like'
-        expect(page).to have_no_link 'Dislike'
+        expect(page).to have_no_link 'like'
+        expect(page).to have_no_link 'dislike'
       end
     end
   end

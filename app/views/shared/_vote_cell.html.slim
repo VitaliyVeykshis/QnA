@@ -1,9 +1,9 @@
 .vote-cell
   - if current_user && !current_user&.author?(resource)
     .vote-up
-      = link_to 'Like', polymorphic_path(resource, action: :vote_up), method: :post, remote: true
+      = link_to fa_icon('thumbs-up'), polymorphic_path(resource, action: :vote_up), method: :post, remote: true, id: 'like', style: 'color: grey'
     .vote-down
-      = link_to 'Dislike', polymorphic_path(resource, action: :vote_down), method: :post, remote: true
+      = link_to fa_icon('thumbs-down'), polymorphic_path(resource, action: :vote_down), method: :post, remote: true, id: 'dislike', style: 'color: grey'
   .rating
     | Rating: 
     span #{resource.rating}
