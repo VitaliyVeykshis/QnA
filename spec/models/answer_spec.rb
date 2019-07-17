@@ -50,4 +50,10 @@ RSpec.describe Answer, type: :model do
       expect(user.badges.first).to eq badge
     end
   end
+
+  describe 'Concerns' do
+    let(:resource) { create(:answer, question: question, user: user) }
+
+    it_behaves_like 'votable'
+  end
 end

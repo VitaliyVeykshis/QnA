@@ -1,8 +1,10 @@
 class Question < ApplicationRecord
+  include Votable
+
   belongs_to :user
+  has_one :badge, dependent: :destroy
   has_many :answers, dependent: :destroy
   has_many :links, dependent: :destroy, as: :linkable
-  has_one :badge, dependent: :destroy
 
   has_many_attached :files
 

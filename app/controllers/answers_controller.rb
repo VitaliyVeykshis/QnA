@@ -1,4 +1,6 @@
 class AnswersController < ApplicationController
+  include Voted
+
   before_action :authenticate_user!
 
   expose :answer, scope: -> { Answer.with_attached_files }
