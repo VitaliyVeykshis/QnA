@@ -20,7 +20,9 @@ class QuestionsController < ApplicationController
   end
 
   def update
-    question.update(question_params) if current_user.author?(question)
+    if current_user.author?(question)
+      render_errors_json unless question.update(question_params)
+    end
   end
 
   def destroy
