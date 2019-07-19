@@ -10,9 +10,10 @@ $(document).on('turbolinks:load', function(){
     };
 
     $.each(e.detail[0], function (key, value){
+      var errorMessage = capitalizeFirst(key.replace('.', ' ') + ' '+ value.toString());
       var $newDiv = $('<div/>')
                       .addClass('invalid-feedback d-block')
-                      .html(capitalizeFirst(value.toString()));
+                      .html(errorMessage);
       var targetClass = key.replace('.', '-')
       var target = '#' + formId + ' .form-group.' + targetClass;
 

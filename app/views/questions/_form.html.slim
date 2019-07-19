@@ -1,7 +1,5 @@
 .form
   = form_with model: question, id: 'new-question-form' do |f|
-      .question-errors
-          = render 'shared/errors', resource: question
       .form-group.title
         = f.label :title
         = f.text_field :title, class: 'form-control'

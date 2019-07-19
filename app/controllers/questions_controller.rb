@@ -15,7 +15,7 @@ class QuestionsController < ApplicationController
     if question.save
       redirect_to question, notice: 'Your question successfully created.'
     else
-      render :new
+      render_errors_json
     end
   end
 
@@ -40,5 +40,9 @@ class QuestionsController < ApplicationController
                                      files: [],
                                      links_attributes: %i[name url],
                                      badge_attributes: %i[title image])
+  end
+
+  def render_errors_json
+    render json: question.errors, status: :unprocessable_entity
   end
 end

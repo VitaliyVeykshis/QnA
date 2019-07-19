@@ -34,10 +34,16 @@ RSpec.describe QuestionsController, type: :controller do
         }.not_to change(Question, :count)
       end
 
-      it 're-renders new view' do
+      it 'renders json with error message' do
         post :create, params: { question: attributes_for(:question, :invalid) }
 
-        expect(response).to render_template :new
+        expect(response.body).to eq "{\"title\":[\"can't be blank\"]}"
+      end
+
+      it 'renders json with status :unprocessable_entity' do
+        post :create, params: { question: attributes_for(:question, :invalid) }
+
+        expect(response).to have_http_status :unprocessable_entity
       end
     end
   end
