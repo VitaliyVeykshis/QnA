@@ -53,6 +53,8 @@ gem 'font-awesome-rails'
 gem 'cocoon'
 # Data in JS
 gem 'gon'
+# Client side templating engine
+gem 'skim'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
