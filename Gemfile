@@ -74,6 +74,7 @@ group :test do
   gem 'capybara'
   gem 'webdrivers'
   gem 'launchy'
+  gem 'action-cable-testing'
 end
 
 
