@@ -2,7 +2,6 @@ require 'rails_helper'
 
 RSpec.describe QuestionsController, type: :controller do
   let(:user) { create(:user) }
-  let(:question) { create(:question, user: user) }
 
   before { sign_in_as(user) }
 
@@ -18,6 +17,15 @@ RSpec.describe QuestionsController, type: :controller do
         expect {
           post :create, params: { question: attributes_for(:question) }
         }.to change(user.questions, :count).by(1)
+      end
+
+      it "broadcasts new question to 'questions' channel" do
+        question_attributes = attributes_for(:question)
+        expected = { question: a_hash_including(question_attributes) }
+
+        expect do
+          post :create, params: { question: question_attributes }
+        end.to have_broadcasted_to('questions').with(include(expected))
       end
 
       it 'redirects to show view' do
@@ -49,6 +57,8 @@ RSpec.describe QuestionsController, type: :controller do
   end
 
   describe 'DELETE #destroy' do
+    let(:question) { create(:question, user: user) }
+
     context 'when author' do
       it 'deletes question' do
         question
@@ -79,6 +89,8 @@ RSpec.describe QuestionsController, type: :controller do
   end
 
   describe 'PATCH #update' do
+    let(:question) { create(:question, user: user) }
+
     context 'when author with valid attributes' do
       it 'changes question attributes' do
         patch :update, params: { id: question, question: attributes_for(:question, :new) }, format: :js

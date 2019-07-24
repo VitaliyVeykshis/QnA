@@ -14,6 +14,7 @@ class QuestionsController < ApplicationController
 
     if question.save
       redirect_to question, notice: 'Your question successfully created.'
+      broadcast
     else
       render_errors_json
     end
@@ -46,5 +47,9 @@ class QuestionsController < ApplicationController
 
   def render_errors_json
     render json: question.errors, status: :unprocessable_entity
+  end
+
+  def broadcast
+    ActionCable.server.broadcast('questions', question: question.as_json)
   end
 end

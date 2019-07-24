@@ -58,6 +58,35 @@ feature 'User can create question', %q{
     end
   end
 
+  describe 'Multiple sessions', js: true do
+    scenario "question appears on another user's page" do
+      Capybara.using_session('user') do
+        sign_in_as(user)
+        visit new_question_path
+      end
+
+      Capybara.using_session('guest') do
+        visit questions_path
+      end
+
+      Capybara.using_session('user') do
+        fill_in 'Title', with: 'Test question'
+        fill_in 'Body', with: 'text text text'
+        click_on 'Ask'
+
+        visit questions_path
+
+        within '.questions' do
+          expect(page).to have_content 'Test question'
+        end
+      end
+
+      Capybara.using_session('guest') do
+        expect(page).to have_content 'Test question'
+      end
+    end
+  end
+
   scenario 'Unauthenticated user tries to ask a question' do
     visit questions_path
     click_on 'Ask question'
