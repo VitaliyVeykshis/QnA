@@ -4,6 +4,7 @@ FactoryBot.define do
     url { 'http://www.google.com' }
 
     trait :gist do
+      name { 'Gist name' }
       url { 'https://gist.github.com/VitaliyVeykshis/bba333f611c70a24cd9a2364e43ce738' }
     end
   end

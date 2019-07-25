@@ -11,6 +11,7 @@ class AnswersController < ApplicationController
     answers << answer
     answer.user = current_user
     answer.save
+    broadcast
   end
 
   def update
@@ -31,5 +32,12 @@ class AnswersController < ApplicationController
     params.require(:answer).permit(:body,
                                    files: [],
                                    links_attributes: %i[name url])
+  end
+
+  def broadcast
+    AnswersChannel.broadcast_to(
+      question,
+      answer: GetAnswerData.call(answer: answer).data
+    )
   end
 end

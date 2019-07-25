@@ -3,6 +3,7 @@ class QuestionsController < ApplicationController
 
   before_action :authenticate_user!, except: %i[index show]
   before_action -> { question.badge = Badge.new }, only: :new
+  before_action -> { gon.question_id = question.id }, only: :show
 
   expose :questions, -> { Question.all }
   expose :question, scope: -> { Question.with_attached_files }
