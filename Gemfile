@@ -79,6 +79,7 @@ group :test do
   gem 'webdrivers'
   gem 'launchy'
   gem 'action-cable-testing'
+  gem 'test-prof'
 end
 
 
