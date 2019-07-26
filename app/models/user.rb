@@ -8,6 +8,7 @@ class User < ApplicationRecord
   has_many :answers, dependent: :destroy
   has_many :badges, dependent: :nullify
   has_many :votes, dependent: :destroy
+  has_many :comments, dependent: :destroy
 
   def author?(resource)
     resource.user_id == id

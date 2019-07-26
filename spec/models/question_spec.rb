@@ -37,5 +37,6 @@ RSpec.describe Question, type: :model do
     let(:resource) { create(:question, user: user) }
 
     it_behaves_like 'votable'
+    it_behaves_like 'commentable'
   end
 end

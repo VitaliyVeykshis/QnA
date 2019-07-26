@@ -7,6 +7,7 @@ RSpec.describe User, type: :model do
     it { should have_many :questions }
     it { should have_many :answers }
     it { should have_many(:badges).dependent(:nullify) }
+    it { should have_many(:comments).dependent(:destroy) }
   end
 
   describe '#author?' do

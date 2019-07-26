@@ -1,0 +1,6 @@
+= form_with model: [resource, resource.comments.build], class: 'd-none', id: "new-comment-#{resource.class.to_s.downcase}-#{resource.id}", remote: true do |f|
+  .form-group.body
+    = f.label :body, 'Your Comment'
+    = f.text_area :body, class: 'form-control'
+  .actions
+    = f.submit 'Post Your Comment', class: 'btn btn-primary'
