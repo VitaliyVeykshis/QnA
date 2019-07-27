@@ -3,9 +3,14 @@ class CommentsController < ApplicationController
 
   expose :commentable, -> { IdentifyResource.call(params: params).resource }
   expose :comment, scope: -> { commentable.comments }
+  expose :question, -> { commentable.is_a?(Question) ? commentable : commentable.question }
 
   def create
-    render_errors_json unless comment.save
+    if comment.save
+      broadcast
+    else
+      render_errors_json
+    end
   end
 
   private
@@ -16,5 +21,12 @@ class CommentsController < ApplicationController
 
   def render_errors_json
     render json: comment.errors, status: :unprocessable_entity
+  end
+
+  def broadcast
+    CommentsChannel.broadcast_to(
+      question,
+      comment: comment.as_json
+    )
   end
 end

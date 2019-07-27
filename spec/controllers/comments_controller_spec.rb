@@ -26,6 +26,15 @@ RSpec.describe CommentsController, type: :controller do
         end.to change(user.comments, :count).by(1)
       end
 
+      it 'broadcasts new comment to question channel' do
+        comment_attributes = attributes_for(:comment)
+        expected = { comment: a_hash_including(comment_attributes) }
+
+        expect do
+          post :create, params: { question_id: question, comment: comment_attributes }, format: :js
+        end.to have_broadcasted_to(question).from_channel(CommentsChannel).with(include(expected))
+      end
+
       it 'renders comment create template' do
         post :create, params: { question_id: question, comment: attributes_for(:comment) }, format: :js
 
@@ -52,6 +61,15 @@ RSpec.describe CommentsController, type: :controller do
         expect do
           post :create, params: { answer_id: answer, comment: attributes_for(:comment) }, format: :js
         end.to change(user.comments, :count).by(1)
+      end
+
+      it 'broadcasts new comment to question channel' do
+        comment_attributes = attributes_for(:comment)
+        expected = { comment: a_hash_including(comment_attributes) }
+
+        expect do
+          post :create, params: { answer_id: answer, comment: comment_attributes }, format: :js
+        end.to have_broadcasted_to(question).from_channel(CommentsChannel).with(include(expected))
       end
 
       it 'renders comment create template' do
