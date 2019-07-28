@@ -1,0 +1,35 @@
+.sugested-answer id="answer-#{@answer.id}"
+  = @answer.body
+  .attachments
+    - if @answer.files
+      - for file in @answer.files
+        .attachment id="attachment-#{file.id}"
+          a href=file.url #{file.filename}
+  - if gon.user_id == @answer.question.user_id
+    p
+      a data-method='patch' data-remote='true' href="/answers/#{@answer.id}/accept" Best
+  .links
+    p Links:
+    ul
+      - for link in @answer.links
+        li id="link-#{link.id}"
+          a href=link.url #{link.name}
+          - if gon.user_id == @answer.user_id
+            a data-method='delete' data-remote='true' data-confirm='Are you sure?' href="/links/#{link.id}" Remove
+          - if link.gist_files
+            .gists
+              - for gist in link.gist_files
+                .gist
+                  p = gist.filename
+                  p = gist.content
+  .vote-cell
+    - if gon.user_id
+      .vote-up
+        a.passive id='like' data-method='post' data-remote='true' href="/answers/#{@answer.id}/vote_up"
+          i.fa.fa-thumbs-up
+      .vote-down
+        a.passive id='dislike' data-method='post' data-remote='true' href="/answers/#{@answer.id}/vote_down"
+          i.fa.fa-thumbs-down
+    .rating
+      | Rating: 
+      span 0

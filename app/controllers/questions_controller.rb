@@ -3,6 +3,7 @@ class QuestionsController < ApplicationController
 
   before_action :authenticate_user!, except: %i[index show]
   before_action -> { question.badge = Badge.new }, only: :new
+  before_action -> { gon.question_id = question.id }, only: :show
 
   expose :questions, -> { Question.all }
   expose :question, scope: -> { Question.with_attached_files }
@@ -14,13 +15,16 @@ class QuestionsController < ApplicationController
 
     if question.save
       redirect_to question, notice: 'Your question successfully created.'
+      broadcast
     else
-      render :new
+      render_errors_json
     end
   end
 
   def update
-    question.update(question_params) if current_user.author?(question)
+    if current_user.author?(question)
+      render_errors_json unless question.update(question_params)
+    end
   end
 
   def destroy
@@ -40,5 +44,13 @@ class QuestionsController < ApplicationController
                                      files: [],
                                      links_attributes: %i[name url],
                                      badge_attributes: %i[title image])
+  end
+
+  def render_errors_json
+    render json: question.errors, status: :unprocessable_entity
+  end
+
+  def broadcast
+    ActionCable.server.broadcast('questions', question: question.as_json)
   end
 end

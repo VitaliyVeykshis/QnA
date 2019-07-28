@@ -7,7 +7,7 @@ feature 'User can create question', %q{
 } do
   given(:user) { create(:user) }
 
-  describe 'Authenticated user' do
+  describe 'Authenticated user', js: true do
     background do
       sign_in_as(user)
 
@@ -54,6 +54,35 @@ feature 'User can create question', %q{
       within '.question' do
         expect(page).to have_content 'Awesome badge'
         expect(page).to have_css "img[src*='badge']"
+      end
+    end
+  end
+
+  describe 'Multiple sessions', js: true do
+    scenario "question appears on another user's page" do
+      Capybara.using_session('user') do
+        sign_in_as(user)
+        visit new_question_path
+      end
+
+      Capybara.using_session('guest') do
+        visit questions_path
+      end
+
+      Capybara.using_session('user') do
+        fill_in 'Title', with: 'Test question'
+        fill_in 'Body', with: 'text text text'
+        click_on 'Ask'
+
+        visit questions_path
+
+        within '.questions' do
+          expect(page).to have_content 'Test question'
+        end
+      end
+
+      Capybara.using_session('guest') do
+        expect(page).to have_content 'Test question'
       end
     end
   end

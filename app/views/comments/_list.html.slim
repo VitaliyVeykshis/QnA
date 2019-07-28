@@ -1,0 +1,6 @@
+.comments
+  = render resource.comments
+- if current_user
+    .new-comment
+      = link_to 'add a comment', '', class: 'new-comment-link', data: { resource_class: resource.class.to_s.downcase, resource_id: resource.id }
+      = render 'comments/form', resource: resource

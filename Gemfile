@@ -51,6 +51,10 @@ gem 'jquery-rails'
 gem 'font-awesome-rails'
 # Nested forms
 gem 'cocoon'
+# Data in JS
+gem 'gon'
+# Client side templating engine
+gem 'skim'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
@@ -74,6 +78,8 @@ group :test do
   gem 'capybara'
   gem 'webdrivers'
   gem 'launchy'
+  gem 'action-cable-testing'
+  gem 'test-prof'
 end
 
 

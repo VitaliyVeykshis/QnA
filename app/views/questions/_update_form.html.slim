@@ -1,11 +1,14 @@
-= form_with model: question, class: 'edit-question hidden' do |f|
-    .question-errors
-        = render 'shared/errors', resource: question
-    = f.label :title
-    = f.text_field :title
-    = f.label :body
-    = f.text_area :body
-    = f.label :files
-    = f.file_field :files, multiple: true, direct_upload: true
-    = render 'links/new' ,resource: question, f: f
-    = f.submit 'Save'
+.form.d-none
+  = form_with model: question, id: 'edit-question-form' do |f|
+      .form-group.title
+        = f.label :title
+        = f.text_field :title, class: 'form-control'
+      .form-group.body
+        = f.label :body
+        = f.text_area :body, class: 'form-control'
+      .form-group.files
+        = f.label :files
+        = f.file_field :files, multiple: true, direct_upload: true, class: 'form-control-file'
+      = render 'links/new' ,resource: question, f: f
+      .actions
+        = f.submit 'Save', class: 'btn btn-primary'

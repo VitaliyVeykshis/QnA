@@ -2,7 +2,6 @@ require 'rails_helper'
 
 RSpec.describe QuestionsController, type: :controller do
   let(:user) { create(:user) }
-  let(:question) { create(:question, user: user) }
 
   before { sign_in_as(user) }
 
@@ -20,6 +19,15 @@ RSpec.describe QuestionsController, type: :controller do
         }.to change(user.questions, :count).by(1)
       end
 
+      it "broadcasts new question to 'questions' channel" do
+        question_attributes = attributes_for(:question)
+        expected = { question: a_hash_including(question_attributes) }
+
+        expect do
+          post :create, params: { question: question_attributes }
+        end.to have_broadcasted_to('questions').with(include(expected))
+      end
+
       it 'redirects to show view' do
         post :create, params: { question: attributes_for(:question) }
 
@@ -34,15 +42,23 @@ RSpec.describe QuestionsController, type: :controller do
         }.not_to change(Question, :count)
       end
 
-      it 're-renders new view' do
+      it 'renders json with error message' do
         post :create, params: { question: attributes_for(:question, :invalid) }
 
-        expect(response).to render_template :new
+        expect(response.body).to eq "{\"title\":[\"can't be blank\"]}"
+      end
+
+      it 'renders json with status :unprocessable_entity' do
+        post :create, params: { question: attributes_for(:question, :invalid) }
+
+        expect(response).to have_http_status :unprocessable_entity
       end
     end
   end
 
   describe 'DELETE #destroy' do
+    let(:question) { create(:question, user: user) }
+
     context 'when author' do
       it 'deletes question' do
         question
@@ -73,6 +89,8 @@ RSpec.describe QuestionsController, type: :controller do
   end
 
   describe 'PATCH #update' do
+    let(:question) { create(:question, user: user) }
+
     context 'when author with valid attributes' do
       it 'changes question attributes' do
         patch :update, params: { id: question, question: attributes_for(:question, :new) }, format: :js
@@ -96,9 +114,16 @@ RSpec.describe QuestionsController, type: :controller do
           .and not_change(question, :body)
       end
 
-      it 'renders update view' do
-        patch :update, params: { id: question, question: attributes_for(:question, :invalid) }, format: :js
-        expect(response).to render_template :update
+      it 'renders json with error message' do
+        post :create, params: { question: attributes_for(:question, :invalid) }
+
+        expect(response.body).to eq "{\"title\":[\"can't be blank\"]}"
+      end
+
+      it 'renders json with status :unprocessable_entity' do
+        post :create, params: { question: attributes_for(:question, :invalid) }
+
+        expect(response).to have_http_status :unprocessable_entity
       end
     end
 

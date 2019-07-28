@@ -40,6 +40,30 @@ feature 'The user can write the answer to a question', %q{
     end
   end
 
+  describe 'Multiple sessions', js: true do
+    scenario "answer appears on another user's page" do
+      Capybara.using_session('user') do
+        sign_in_as(user)
+        visit question_path(question)
+      end
+
+      Capybara.using_session('guest') do
+        visit question_path(question)
+      end
+
+      Capybara.using_session('user') do
+        fill_in 'Answer', with: 'Answer body'
+        click_on 'Post'
+
+        expect(page).to have_content 'Answer body'
+      end
+
+      Capybara.using_session('guest') do
+        expect(page).to have_content 'Answer body'
+      end
+    end
+  end
+
   scenario 'Unauthenticated user tries to answer the question' do
     visit question_path(question)
     click_on 'Post'

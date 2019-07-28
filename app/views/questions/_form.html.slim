@@ -1,0 +1,21 @@
+.form
+  = form_with model: question, id: 'new-question-form' do |f|
+      .form-group.title
+        = f.label :title
+        = f.text_field :title, class: 'form-control'
+      .form-group.body
+        = f.label :body
+        = f.text_area :body, class: 'form-control'
+      = f.fields_for :badge do |b|
+        .form-group.badge-title
+          = b.label :title, 'Badge title'
+          = b.text_field :title, class: 'form-control'
+        .form-group.badge-image
+          = b.label :image, 'Badge image'
+          = b.file_field :image, direct_upload: true, class: 'form-control-file'
+      .form-group.files
+        = f.label :files
+        = f.file_field :files, multiple: true, direct_upload: true, class: 'form-control-file'
+      = render 'links/new' ,resource: question, f: f
+      .actions
+        = f.submit 'Ask', class: 'btn btn-primary'
