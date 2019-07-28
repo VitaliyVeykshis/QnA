@@ -55,6 +55,9 @@ gem 'cocoon'
 gem 'gon'
 # Client side templating engine
 gem 'skim'
+# OAuth authentication
+gem 'omniauth'
+gem 'omniauth-github'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
