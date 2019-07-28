@@ -28,8 +28,8 @@
         a.passive id='like' data-method='post' data-remote='true' href="/answers/#{@answer.id}/vote_up"
           i.fa.fa-thumbs-up
       .vote-down
-        a.passive id='dislike' data-method='post' data-remote='true' href="/answers/#{@answer.id}/vote_up"
-            i.fa.fa-thumbs-down
+        a.passive id='dislike' data-method='post' data-remote='true' href="/answers/#{@answer.id}/vote_down"
+          i.fa.fa-thumbs-down
     .rating
       | Rating: 
       span 0
