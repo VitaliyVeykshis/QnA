@@ -85,6 +85,7 @@ group :test do
   gem 'launchy'
   gem 'action-cable-testing'
   gem 'test-prof'
+  gem 'capybara-email'
 end
 
 
