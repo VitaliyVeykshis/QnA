@@ -30,5 +30,21 @@ RSpec.describe FindForOauth, type: :interactor do
       it_behaves_like 'valid identity'
       it_behaves_like 'valid context'
     end
+
+    context 'when auth not have email' do
+      let(:auth) { create(:auth, :vkontakte) }
+      let(:context) { FindForOauth.call(auth: auth) }
+
+      it 'creates new user' do
+        expect { context }.to change(User, :count)
+      end
+
+      it 'creates new user with temporary email' do
+        expect(context.identity.user.email).to eq "#{auth.provider}_#{auth.uid}@change.me"
+      end
+
+      it_behaves_like 'valid identity'
+      it_behaves_like 'valid context'
+    end
   end
 end

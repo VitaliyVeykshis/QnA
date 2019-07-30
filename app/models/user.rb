@@ -6,8 +6,9 @@ class User < ApplicationRecord
          :recoverable,
          :rememberable,
          :validatable,
+         :confirmable,
          :omniauthable,
-         omniauth_providers: %i[github]
+         omniauth_providers: %i[github vkontakte]
 
   has_many :questions, dependent: :destroy
   has_many :answers, dependent: :destroy
