@@ -16,4 +16,12 @@ feature 'User can sign up', %q{
 
     expect(page).to have_content 'Welcome! You have signed up successfully.'
   end
+
+  describe 'OAuth authentication' do
+    scenario 'Sign up with GitHub' do
+      click_on 'Sign in with GitHub'
+
+      expect(page).to have_content('Successfully authenticated from GitHub account.')
+    end
+  end
 end
