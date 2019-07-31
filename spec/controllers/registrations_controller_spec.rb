@@ -19,7 +19,7 @@ RSpec.describe RegistrationsController, type: :controller do
     context 'when valid email' do
       it 'updates user unconfirmed email' do
         new_email = 'user@email.com'
-        patch :create_oauth_sign_up, params: { email: new_email }, session: { oauth_user_id: user.id }
+        patch :create_oauth_sign_up, params: { email: new_email }, session: { 'devise.oauth_user_id': user.id }
         user.reload
 
         expect(user.unconfirmed_email).to eq new_email
@@ -27,7 +27,7 @@ RSpec.describe RegistrationsController, type: :controller do
 
       it 'renders root_path' do
         new_email = 'user@email.com'
-        patch :create_oauth_sign_up, params: { email: new_email }, session: { oauth_user_id: user.id }
+        patch :create_oauth_sign_up, params: { email: new_email }, session: { 'devise.oauth_user_id': user.id }
 
         expect(response).to redirect_to root_path
       end
@@ -35,7 +35,7 @@ RSpec.describe RegistrationsController, type: :controller do
 
     context 'when invalid email' do
       before do
-        patch :create_oauth_sign_up, params: { email: '' }, session: { oauth_user_id: user.id }
+        patch :create_oauth_sign_up, params: { email: '' }, session: { 'devise.oauth_user_id': user.id }
       end
 
       it 'renders json with error message' do

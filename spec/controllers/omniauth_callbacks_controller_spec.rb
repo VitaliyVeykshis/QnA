@@ -68,7 +68,7 @@ RSpec.describe OmniauthCallbacksController, type: :controller do
       end
 
       it 'assigns oauth_user_id' do
-        expect(session[:oauth_user_id]).to eq User.last.id
+        expect(session['devise.oauth_user_id']).to eq User.last.id
       end
 
       it 'redirects to new_oauth_sign_up_path' do

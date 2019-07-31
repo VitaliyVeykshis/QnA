@@ -1,5 +1,5 @@
 class RegistrationsController < Devise::RegistrationsController
-  expose :user, -> { User.find(session[:oauth_user_id]) }
+  expose :user, -> { User.find(session['devise.oauth_user_id']) }
 
   def new_oauth_sign_up; end
 
