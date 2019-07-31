@@ -8,6 +8,21 @@ RSpec.describe User, type: :model do
     it { should have_many :answers }
     it { should have_many(:badges).dependent(:nullify) }
     it { should have_many(:comments).dependent(:destroy) }
+    it { should have_many(:identities).dependent(:destroy) }
+  end
+
+  describe '.find_for_oauth' do
+    let(:auth) { create(:auth, :github) }
+
+    it 'calls FindForOauth' do
+      expect(FindForOauth).to receive(:call).with(auth: auth).and_call_original
+
+      User.find_for_oauth(auth)
+    end
+
+    it 'returns user' do
+      expect(User.find_for_oauth(auth)).to eq User.last
+    end
   end
 
   describe '#author?' do

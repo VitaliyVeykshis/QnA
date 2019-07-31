@@ -1,6 +1,19 @@
 Rails.application.routes.draw do
   mount ActionCable.server => '/cable'
-  devise_for :users
+  devise_for :users,
+             controllers: {
+               registrations: 'registrations',
+               omniauth_callbacks: 'omniauth_callbacks'
+             }
+
+  devise_scope :user do
+    get 'registrations/new_oauth_sign_up',
+        to: 'registrations#new_oauth_sign_up',
+        as: 'new_oauth_sign_up'
+    patch 'registrations/create_oauth_sign_up',
+          to: 'registrations#create_oauth_sign_up',
+          as: 'create_oauth_sign_up'
+  end
 
   root to: 'questions#index'
   get 'badges/index'

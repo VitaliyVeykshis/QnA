@@ -1,0 +1,17 @@
+.row.justify-content-center.mt-3
+  .col.col-md-4
+    .card.border-primary
+      .card-body
+        h2.card-title
+          | Sign up
+        p.card-text
+          = form_with url: create_oauth_sign_up_url, method: :patch, id: 'new-outh-sign-up' do |f|
+            .form-group.email
+              .field
+                = f.label :email
+                br
+                = f.email_field :email, autofocus: true, autocomplete: "email", class: 'form-control'
+            .actions
+              = f.submit "Sign up", class: 'btn btn-primary'
+        p.card-text
+          = render "devise/shared/links"

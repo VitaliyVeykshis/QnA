@@ -36,6 +36,10 @@ end
 
 RSpec::Matchers.define_negated_matcher :not_change, :change
 
+OmniAuth.config.test_mode = true
+OmniAuth.config.add_mock(:github, { uid: '12345', info: { email: 'user@mail.com' } })
+OmniAuth.config.add_mock(:vkontakte, { uid: '12345' })
+
 RSpec.configure do |config|
   config.include FactoryBot::Syntax::Methods
   config.include Devise::Test::ControllerHelpers, type: :controller
