@@ -47,6 +47,7 @@ RSpec.configure do |config|
   config.include Helpers::Features::Authentication, type: :feature
   config.include Helpers::Controllers::Authentication, type: :controller
   config.include Rails.application.routes.url_helpers
+  config.include RedirectBack
 
   Capybara.javascript_driver = :selenium_chrome_headless
 

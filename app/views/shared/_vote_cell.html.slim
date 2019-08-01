@@ -1,5 +1,5 @@
 .vote-cell
-  - if current_user && !current_user&.author?(resource)
+  - if policy(resource).vote_up?
     .vote-up
       = link_to fa_icon('thumbs-up'), polymorphic_path(resource, action: :vote_up), method: :post, remote: true, id: 'like', class: current_user.voted_up_on?(resource) ? 'active' : 'passive'
     .vote-down

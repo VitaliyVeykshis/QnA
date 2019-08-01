@@ -1,4 +1,4 @@
 .attachment id="attachment-#{file.id}"
   = link_to file.filename.to_s, url_for(file)
-  - if current_user&.author?(file.record)
+  - if policy(file).destroy?
     = link_to 'Delete', active_storage_attachment_path(file), method: :delete, data: { confirm: 'Are you sure?', remote: true }
