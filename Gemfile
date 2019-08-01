@@ -89,6 +89,8 @@ group :test do
   gem 'action-cable-testing'
   gem 'test-prof'
   gem 'capybara-email'
+  # Pundit matchers
+  gem 'pundit-matchers', '~> 1.6.0'
 end
 
 
