@@ -59,6 +59,8 @@ gem 'skim'
 gem 'omniauth'
 gem 'omniauth-github'
 gem 'omniauth-vkontakte'
+# Authorization
+gem 'pundit'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
@@ -87,6 +89,8 @@ group :test do
   gem 'action-cable-testing'
   gem 'test-prof'
   gem 'capybara-email'
+  # Pundit matchers
+  gem 'pundit-matchers', '~> 1.6.0'
 end
 
 

@@ -2,9 +2,9 @@
   . class=(answer.accepted? ? 'accepted-answer' : 'sugested-answer') id="answer-#{answer.id}"
     = answer.body
     = render 'active_storage/attachments/attachments', resource: answer
-    - if current_user&.author?(answer.question) && !answer.accepted?
+    - if policy(answer).accept?
       p= link_to 'Best', accept_answer_path(answer), method: :patch, remote: true
-    - if current_user&.author?(answer)
+    - if policy(answer).update?
       p= link_to 'Edit', '#', class: 'edit-answer-link', data: { answer_id: answer.id }
       p= link_to 'Delete answer', answer_path(answer), method: :delete, data: { confirm: 'Are you sure?', remote: true }
       = render 'answers/update_form', answer: answer

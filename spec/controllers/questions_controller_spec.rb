@@ -81,6 +81,8 @@ RSpec.describe QuestionsController, type: :controller do
       end
 
       it 'redirects to question show view' do
+        from question_path(second_question)
+
         delete :destroy, params: { id: second_question }
 
         expect(response).to redirect_to question_path(second_question)

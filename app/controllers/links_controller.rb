@@ -1,5 +1,6 @@
 class LinksController < ApplicationController
   before_action :authenticate_user!
+  before_action -> { authorize link }
 
   expose(:link)
 

@@ -1,7 +1,7 @@
 h1= question.title
 p= question.body
 = render 'active_storage/attachments/attachments', resource: question
-- if current_user&.author?(question)
+- if policy(question).update?
   p= link_to 'Edit', '#', class: 'edit-question-link', data: { question_id: question.id }
   p= link_to 'Delete question', question_path(question), method: :delete, data: {confirm: 'Are you sure?'}
   = render 'update_form', question: question

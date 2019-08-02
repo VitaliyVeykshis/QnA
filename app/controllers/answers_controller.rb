@@ -2,6 +2,7 @@ class AnswersController < ApplicationController
   include Voted
 
   before_action :authenticate_user!
+  before_action -> { authorize answer }
 
   expose :answer, scope: -> { Answer.with_attached_files }
   expose :question, find: -> { answer&.question || Question.find(params[:question_id]) }
@@ -15,15 +16,15 @@ class AnswersController < ApplicationController
   end
 
   def update
-    answer.update(answer_params) if current_user.author?(answer)
+    answer.update(answer_params)
   end
 
   def destroy
-    answer.destroy if current_user.author?(answer)
+    answer.destroy
   end
 
   def accept
-    answer.accept! if current_user.author?(answer.question)
+    answer.accept!
   end
 
   private

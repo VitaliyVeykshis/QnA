@@ -4,6 +4,7 @@ class QuestionsController < ApplicationController
   before_action :authenticate_user!, except: %i[index show]
   before_action -> { question.badge = Badge.new }, only: :new
   before_action -> { gon.question_id = question.id }, only: :show
+  before_action -> { authorize question }
 
   expose :questions, -> { Question.all }
   expose :question, scope: -> { Question.with_attached_files }
@@ -22,18 +23,12 @@ class QuestionsController < ApplicationController
   end
 
   def update
-    if current_user.author?(question)
-      render_errors_json unless question.update(question_params)
-    end
+    render_errors_json unless question.update(question_params)
   end
 
   def destroy
-    if current_user.author?(question)
-      question.destroy
-      redirect_to questions_path
-    else
-      redirect_to question
-    end
+    question.destroy
+    redirect_to questions_path
   end
 
   private

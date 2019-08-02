@@ -6,6 +6,7 @@ require File.expand_path('../../config/environment', __FILE__)
 abort("The Rails environment is running in production mode!") if Rails.env.production?
 require "action_cable/testing/rspec"
 require 'rspec/rails'
+require 'pundit/rspec'
 # Add additional requires below this line. Rails is not loaded until this point!
 
 # Requires supporting ruby files with custom matchers and macros, etc, in
@@ -46,6 +47,7 @@ RSpec.configure do |config|
   config.include Helpers::Features::Authentication, type: :feature
   config.include Helpers::Controllers::Authentication, type: :controller
   config.include Rails.application.routes.url_helpers
+  config.include RedirectBack
 
   Capybara.javascript_driver = :selenium_chrome_headless
 

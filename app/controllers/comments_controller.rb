@@ -1,5 +1,6 @@
 class CommentsController < ApplicationController
   before_action :authenticate_user!
+  before_action -> { authorize comment }
 
   expose :commentable, -> { IdentifyResource.call(params: params).resource }
   expose :comment, scope: -> { commentable.comments }
