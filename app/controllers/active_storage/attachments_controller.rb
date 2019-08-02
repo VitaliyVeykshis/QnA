@@ -5,6 +5,6 @@ class ActiveStorage::AttachmentsController < ApplicationController
   expose :attachment, fetch: -> { ActiveStorage::Attachment.find(params[:id]) }
 
   def destroy
-    attachment.purge if current_user.author?(attachment.record)
+    attachment.purge
   end
 end
