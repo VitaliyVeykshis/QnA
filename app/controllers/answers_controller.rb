@@ -5,7 +5,7 @@ class AnswersController < ApplicationController
   before_action -> { authorize answer }
 
   expose :answer, scope: -> { Answer.with_attached_files }
-  expose :question, find: -> { answer&.question || Question.find(params[:question_id]) }
+  expose :question, find: -> { find_question }
   expose :answers, -> { question.answers }
 
   def create
@@ -40,5 +40,9 @@ class AnswersController < ApplicationController
       question,
       answer: GetAnswerData.call(answer: answer).data
     )
+  end
+
+  def find_question
+    answer&.question || Question.find(params[:question_id])
   end
 end

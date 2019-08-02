@@ -1,5 +1,5 @@
 class RegistrationsController < Devise::RegistrationsController
-  expose :user, -> { User.find(session['devise.oauth_user_id']) }
+  expose :user, -> { find_user }
 
   def new_oauth_sign_up; end
 
@@ -15,5 +15,9 @@ class RegistrationsController < Devise::RegistrationsController
 
   def render_errors_json
     render json: user.errors, status: :unprocessable_entity
+  end
+
+  def find_user
+    User.find(session['devise.oauth_user_id'])
   end
 end

@@ -2,7 +2,7 @@ module Voted
   extend ActiveSupport::Concern
 
   included do
-    expose :resource, -> { controller_name.classify.constantize.find(params[:id]) }
+    expose :resource, -> { find_resource }
   end
 
   def vote_up
@@ -27,5 +27,9 @@ module Voted
       voted_up_on: current_user.voted_up_on?(resource),
       voted_down_on: current_user.voted_down_on?(resource)
     }
+  end
+
+  def find_resource
+    controller_name.classify.constantize.find(params[:id])
   end
 end

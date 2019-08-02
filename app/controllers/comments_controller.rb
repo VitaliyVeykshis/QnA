@@ -2,9 +2,9 @@ class CommentsController < ApplicationController
   before_action :authenticate_user!
   before_action -> { authorize comment }
 
-  expose :commentable, -> { IdentifyResource.call(params: params).resource }
+  expose :commentable, -> { find_commentable }
   expose :comment, scope: -> { commentable.comments }
-  expose :question, -> { commentable.is_a?(Question) ? commentable : commentable.question }
+  expose :question, -> { find_question }
 
   def create
     if comment.save
@@ -29,5 +29,13 @@ class CommentsController < ApplicationController
       question,
       comment: comment.as_json
     )
+  end
+
+  def find_commentable
+    IdentifyResource.call(params: params).resource
+  end
+
+  def find_question
+    commentable.is_a?(Question) ? commentable : commentable.question
   end
 end
