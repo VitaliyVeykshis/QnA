@@ -9,6 +9,7 @@ RSpec.describe User, type: :model do
     it { should have_many(:badges).dependent(:nullify) }
     it { should have_many(:comments).dependent(:destroy) }
     it { should have_many(:identities).dependent(:destroy) }
+    it { should have_many(:oauth_applications).dependent(:destroy).class_name('Doorkeeper::Application')}
   end
 
   describe '.find_for_oauth' do

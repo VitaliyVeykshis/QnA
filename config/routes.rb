@@ -1,5 +1,8 @@
 Rails.application.routes.draw do
-  use_doorkeeper
+  use_doorkeeper do
+    controllers applications: 'oauth/applications'
+  end
+
   mount ActionCable.server => '/cable'
   devise_for :users,
              controllers: {
