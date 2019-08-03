@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  use_doorkeeper
   mount ActionCable.server => '/cable'
   devise_for :users,
              controllers: {
