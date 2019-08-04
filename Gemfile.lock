@@ -118,6 +118,8 @@ GEM
       railties (>= 4.2.0)
     faraday (0.15.4)
       multipart-post (>= 1.2, < 3)
+    fast_jsonapi (1.5)
+      activesupport (>= 4.2)
     ffi (1.11.1)
     font-awesome-rails (4.7.0.5)
       railties (>= 3.2, < 6.1)
@@ -351,6 +353,7 @@ DEPENDENCIES
   devise
   doorkeeper
   factory_bot_rails
+  fast_jsonapi
   font-awesome-rails
   gon
   interactor
