@@ -44,4 +44,12 @@ Rails.application.routes.draw do
   end
 
   resources :links, only: :destroy
+
+  namespace :api do
+    namespace :v1 do
+      resources :profiles, only: %i[index] do
+        get :me, on: :collection
+      end
+    end
+  end
 end
