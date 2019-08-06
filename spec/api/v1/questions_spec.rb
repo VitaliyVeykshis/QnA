@@ -96,4 +96,90 @@ describe 'Questions API', type: :request do
       end
     end
   end
+
+  describe 'POST #create /api/v1/questions' do
+    let(:method) { :post }
+    let(:api_path) { '/api/v1/questions' }
+
+    it_behaves_like 'API Authorizable'
+
+    context 'when access is authorized' do
+      let(:user) { create(:user) }
+      let(:access_token) { create(:access_token, resource_owner_id: user.id) }
+      let(:options) do
+        { params: { question: attributes_for(:question),
+                    access_token: access_token.token,
+                    format: :json } }
+      end
+
+      it 'returns 200 status' do
+        do_request(method, api_path, options)
+
+        expect(response).to be_successful
+      end
+
+      context 'when valid attributs' do
+        it 'saves new question in database' do
+          expect { do_request(method, api_path, options) }
+            .to change(Question, :count).by(1)
+        end
+
+        it 'sets current_user as question author' do
+          expect { do_request(method, api_path, options) }
+            .to change(user.questions, :count).by(1)
+        end
+
+        it "broadcasts new question to 'questions' channel" do
+          question_attributes = attributes_for(:question)
+          expected = { question: a_hash_including(question_attributes) }
+          options = { params: { question: question_attributes,
+                                access_token: access_token.token,
+                                format: :json } }
+
+          expect do
+            do_request(method, api_path, options)
+          end.to have_broadcasted_to('questions').with(include(expected))
+        end
+
+        it 'renders json with question' do
+          do_request(method, api_path, options)
+
+          question_json = QuestionSerializer.new(Question.last).serialized_json
+
+          expect(response_json.to_json).to eq question_json
+        end
+
+        it 'renders json with status :created' do
+          do_request(method, api_path, options)
+
+          expect(response).to have_http_status :created
+        end
+      end
+
+      context 'when invalid attributs' do
+        let(:options) do
+          { params: { question: attributes_for(:question, :invalid),
+                      access_token: access_token.token,
+                      format: :json } }
+        end
+
+        it 'does not save new question in database' do
+          expect { do_request(method, api_path, options) }
+            .not_to change(Question, :count)
+        end
+
+        it 'renders json with error message' do
+          do_request(method, api_path, options)
+
+          expect(response.body).to eq "{\"title\":[\"can't be blank\"]}"
+        end
+
+        it 'renders json with status :unprocessable_entity' do
+          do_request(method, api_path, options)
+
+          expect(response).to have_http_status :unprocessable_entity
+        end
+      end
+    end
+  end
 end

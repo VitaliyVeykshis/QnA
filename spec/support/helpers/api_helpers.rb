@@ -10,10 +10,9 @@ module Helpers
 
     def valid_json_options
       @valid_json_options ||= {
-        params: { access_token: create(:access_token).token },
-        headers: {
-          'CONTENT_TYPE' => 'application/json',
-          'ACCEPT' => 'application/json'
+        params: {
+          access_token: create(:access_token).token,
+          format: :json
         }
       }
     end
