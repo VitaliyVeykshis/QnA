@@ -49,6 +49,7 @@ RSpec.configure do |config|
   config.include Rails.application.routes.url_helpers
   config.include RedirectBack
   config.include Helpers::ApiHelpers, type: :request
+  config.include Helpers::JsonHelpers
 
   Capybara.javascript_driver = :selenium_chrome_headless
 
