@@ -144,6 +144,8 @@ describe 'Questions API', type: :request do
         let(:addition) { { question: attributes_for(:question, :invalid) } }
         let(:options) { json_options(user: user, addition: addition) }
 
+        it_behaves_like 'API failure response', :unprocessable_entity
+
         it 'does not save new question in database' do
           expect { do_request(method, api_path, options) }
             .not_to change(Question, :count)
@@ -153,12 +155,6 @@ describe 'Questions API', type: :request do
           do_request(method, api_path, options)
 
           expect(response.body).to eq "{\"title\":[\"can't be blank\"]}"
-        end
-
-        it 'renders json with status :unprocessable_entity' do
-          do_request(method, api_path, options)
-
-          expect(response).to have_http_status :unprocessable_entity
         end
       end
     end
@@ -192,6 +188,8 @@ describe 'Questions API', type: :request do
         let(:addition) { { question: attributes_for(:question, :invalid) } }
         let(:options) { json_options(user: user, addition: addition) }
 
+        it_behaves_like 'API failure response', :unprocessable_entity
+
         it 'does not change question attributes' do
           expect { do_request(method, api_path, options) }
             .to not_change(question, :title)
@@ -203,28 +201,18 @@ describe 'Questions API', type: :request do
 
           expect(response.body).to eq "{\"title\":[\"can't be blank\"]}"
         end
-
-        it 'renders json with status :unprocessable_entity' do
-          do_request(method, api_path, options)
-
-          expect(response).to have_http_status :unprocessable_entity
-        end
       end
 
       context 'when not author' do
         let(:addition) { { question: attributes_for(:question) } }
         let(:options) { json_options(addition: addition) }
 
+        it_behaves_like 'API failure response', :forbidden
+
         it 'does not change question attributes' do
           expect { do_request(method, api_path, options) }
             .to not_change(question, :title)
             .and not_change(question, :body)
-        end
-
-        it 'response status :forbidden' do
-          do_request(method, api_path, options)
-
-          expect(response).to have_http_status :forbidden
         end
       end
     end
@@ -261,15 +249,11 @@ describe 'Questions API', type: :request do
       context 'when not author' do
         let(:options) { json_options }
 
+        it_behaves_like 'API failure response', :forbidden
+
         it 'does not delete question' do
           expect { do_request(method, api_path, options) }
             .not_to change(Question, :count)
-        end
-
-        it 'response with status :forbidden' do
-          do_request(method, api_path, options)
-
-          expect(response).to have_http_status :forbidden
         end
       end
     end
