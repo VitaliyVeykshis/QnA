@@ -1,11 +1,6 @@
 require 'rails_helper'
 
 describe 'Pofiles API', type: :request do
-  let(:headers) do
-    { 'CONTENT_TYPE' => 'application/json',
-      'ACCEPT' => 'application/json' }
-  end
-
   describe 'GET /api/v1/profiles/me' do
     let(:api_path) { '/api/v1/profiles/me' }
     let(:method) { :get }
@@ -16,8 +11,8 @@ describe 'Pofiles API', type: :request do
       let(:me) { create(:user) }
       let(:access_token) { create(:access_token, resource_owner_id: me.id) }
       let(:options) do
-        { params: { access_token: access_token.token },
-          headers: headers }
+        { params: { access_token: access_token.token,
+                    format: :json } }
       end
 
       before { do_request(method, api_path, options) }
@@ -27,14 +22,14 @@ describe 'Pofiles API', type: :request do
       end
 
       it 'returns all public fields' do
-        %w[id email created_at updated_at].each do |attr|
-          expect(json.dig('data', 'attributes', attr)).to eq me.send(attr).as_json
+        %i[id email created_at updated_at].each do |attr|
+          expect(response_json.dig(:data, :attributes, attr)).to eq me.send(attr).as_json
         end
       end
 
       it 'does not return private fields' do
-        %w[password encrypted_password].each do |attr|
-          expect(json.dig('data', 'attributes')).not_to have_key(attr)
+        %i[password encrypted_password].each do |attr|
+          expect(response_json.dig(:data, :attributes)).not_to have_key(attr)
         end
       end
     end
@@ -51,10 +46,10 @@ describe 'Pofiles API', type: :request do
       let(:oauth_application) { create(:oauth_application, owner: me) }
       let(:access_token) { create(:access_token, application: oauth_application, resource_owner_id: me.id) }
       let!(:users) { create_list(:user, 3) }
-      let(:users_list) { json.dig('data') }
+      let(:users_list) { response_json.dig(:data) }
       let(:options) do
-        { params: { access_token: access_token.token },
-          headers: headers }
+        { params: { access_token: access_token.token,
+                    format: :json } }
       end
 
       before { do_request(method, api_path, options) }
