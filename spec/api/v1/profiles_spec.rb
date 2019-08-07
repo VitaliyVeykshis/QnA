@@ -9,13 +9,8 @@ describe 'Pofiles API', type: :request do
 
     context 'when access is authorized' do
       let(:me) { create(:user) }
-      let(:access_token) { create(:access_token, resource_owner_id: me.id) }
-      let(:options) do
-        { params: { access_token: access_token.token,
-                    format: :json } }
-      end
 
-      before { do_request(method, api_path, options) }
+      before { do_request(method, api_path, json_options(user: me)) }
 
       it 'returns 200 status' do
         expect(response).to be_successful
@@ -43,19 +38,13 @@ describe 'Pofiles API', type: :request do
 
     context 'when access is authorized' do
       let(:me) { create(:user) }
-      let(:oauth_application) { create(:oauth_application, owner: me) }
-      let(:access_token) { create(:access_token, application: oauth_application, resource_owner_id: me.id) }
       let!(:users) { create_list(:user, 3) }
       let(:users_list) { response_json.dig(:data) }
-      let(:options) do
-        { params: { access_token: access_token.token,
-                    format: :json } }
-      end
 
-      before { do_request(method, api_path, options) }
+      before { do_request(method, api_path, json_options(user: me)) }
 
       it 'returns list of users' do
-        expect(users_list.size).to eq users.size
+        expect(users_list.size).to eq User.where.not(id: me.id).count
       end
 
       it 'returns users profiles' do

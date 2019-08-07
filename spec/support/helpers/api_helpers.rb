@@ -8,13 +8,14 @@ module Helpers
       send method, path, options
     end
 
-    def valid_json_options
-      @valid_json_options ||= {
-        params: {
-          access_token: create(:access_token).token,
-          format: :json
-        }
-      }
+    def json_options(options = {})
+      user = options[:user] || create(:user)
+      addition = options[:addition] || {}
+      access_token = options[:access_token] ||
+                     create(:access_token, resource_owner_id: user.id)
+
+      { params: { access_token: access_token.token,
+                  format: :json }.merge(addition) }
     end
   end
 end

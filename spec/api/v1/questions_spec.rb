@@ -12,7 +12,7 @@ describe 'Questions API', type: :request do
       let(:question) { questions.first }
       let(:question_json) { response_json.dig(:data).first }
 
-      before { do_request(method, api_path, valid_json_options) }
+      before { do_request(method, api_path, json_options) }
 
       it 'returns 200 status' do
         expect(response).to be_successful
@@ -48,7 +48,7 @@ describe 'Questions API', type: :request do
     context 'when access is authorized' do
       let(:question_json) { response_json.dig(:data) }
 
-      before { do_request(method, api_path, valid_json_options) }
+      before { do_request(method, api_path, json_options) }
 
       it 'returns 200 status' do
         expect(response).to be_successful
@@ -75,7 +75,7 @@ describe 'Questions API', type: :request do
     context 'when question contains comments' do
       let!(:comments) { create_list(:comment, 2, commentable: question) }
 
-      before { do_request(method, api_path, valid_json_options) }
+      before { do_request(method, api_path, json_options) }
 
       it 'contains list of comments' do
         comments_from_json = json_included_attributes_of(response_json, 'comment', &:to_json)
@@ -87,7 +87,7 @@ describe 'Questions API', type: :request do
     context 'when question contains links' do
       let!(:links) { create_list(:link, 2, linkable: question) }
 
-      before { do_request(method, api_path, valid_json_options) }
+      before { do_request(method, api_path, json_options) }
 
       it 'contains list of links' do
         comments_from_json = json_included_attributes_of(response_json, 'link', &:to_json)
@@ -105,12 +105,8 @@ describe 'Questions API', type: :request do
 
     context 'when access is authorized' do
       let(:user) { create(:user) }
-      let(:access_token) { create(:access_token, resource_owner_id: user.id) }
-      let(:options) do
-        { params: { question: attributes_for(:question),
-                    access_token: access_token.token,
-                    format: :json } }
-      end
+      let(:addition) { { question: attributes_for(:question) } }
+      let(:options) { json_options(user: user, addition: addition) }
 
       it 'returns 200 status' do
         do_request(method, api_path, options)
@@ -131,10 +127,9 @@ describe 'Questions API', type: :request do
 
         it "broadcasts new question to 'questions' channel" do
           question_attributes = attributes_for(:question)
+          addition = { question: question_attributes }
+          options = json_options(user: user, addition: addition)
           expected = { question: a_hash_including(question_attributes) }
-          options = { params: { question: question_attributes,
-                                access_token: access_token.token,
-                                format: :json } }
 
           expect do
             do_request(method, api_path, options)
@@ -157,11 +152,8 @@ describe 'Questions API', type: :request do
       end
 
       context 'when invalid attributs' do
-        let(:options) do
-          { params: { question: attributes_for(:question, :invalid),
-                      access_token: access_token.token,
-                      format: :json } }
-        end
+        let(:addition) { { question: attributes_for(:question, :invalid) } }
+        let(:options) { json_options(user: user, addition: addition) }
 
         it 'does not save new question in database' do
           expect { do_request(method, api_path, options) }
@@ -192,12 +184,8 @@ describe 'Questions API', type: :request do
 
     context 'when access is authorized' do
       let(:user) { question.user }
-      let(:access_token) { create(:access_token, resource_owner_id: user.id) }
-      let(:options) do
-        { params: { question: attributes_for(:question),
-                    access_token: access_token.token,
-                    format: :json } }
-      end
+      let(:addition) { { question: attributes_for(:question) } }
+      let(:options) { json_options(user: user, addition: addition) }
 
       it 'returns 200 status' do
         do_request(method, api_path, options)
@@ -206,11 +194,8 @@ describe 'Questions API', type: :request do
       end
 
       context 'when author with valid attributes' do
-        let(:options) do
-          { params: { question: attributes_for(:question, :new),
-                      access_token: access_token.token,
-                      format: :json } }
-        end
+        let(:addition) { { question: attributes_for(:question, :new) } }
+        let(:options) { json_options(user: user, addition: addition) }
 
         it 'changes question attributes' do
           do_request(method, api_path, options)
@@ -235,11 +220,8 @@ describe 'Questions API', type: :request do
       end
 
       context 'when author with invalid attributes' do
-        let(:options) do
-          { params: { question: attributes_for(:question, :invalid),
-                      access_token: access_token.token,
-                      format: :json } }
-        end
+        let(:addition) { { question: attributes_for(:question, :invalid) } }
+        let(:options) { json_options(user: user, addition: addition) }
 
         it 'does not change question attributes' do
           expect { do_request(method, api_path, options) }
@@ -261,12 +243,8 @@ describe 'Questions API', type: :request do
       end
 
       context 'when not author' do
-        let(:access_token) { create(:access_token, resource_owner_id: create(:user).id) }
-        let(:options) do
-          { params: { question: attributes_for(:question, :invalid),
-                      access_token: access_token.token,
-                      format: :json } }
-        end
+        let(:addition) { { question: attributes_for(:question) } }
+        let(:options) { json_options(addition: addition) }
 
         it 'does not change question attributes' do
           expect { do_request(method, api_path, options) }
@@ -292,11 +270,7 @@ describe 'Questions API', type: :request do
 
     context 'when access is authorized' do
       let(:user) { question.user }
-      let(:access_token) { create(:access_token, resource_owner_id: user.id) }
-      let(:options) do
-        { params: { access_token: access_token.token,
-                    format: :json } }
-      end
+      let(:options) { json_options(user: user) }
 
       it 'returns 200 status' do
         do_request(method, api_path, options)
@@ -318,11 +292,7 @@ describe 'Questions API', type: :request do
       end
 
       context 'when not author' do
-        let(:access_token) { create(:access_token, resource_owner_id: create(:user).id) }
-        let(:options) do
-          { params: { access_token: access_token.token,
-                      format: :json } }
-        end
+        let(:options) { json_options }
 
         it 'does not delete question' do
           expect { do_request(method, api_path, options) }
