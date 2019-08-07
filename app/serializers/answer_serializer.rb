@@ -12,4 +12,10 @@ class AnswerSerializer
   has_many :comments
   has_many :links
   belongs_to :user
+
+  attribute :files, if: proc { |_, params|
+    params.dig(:files) == true
+  } do |object|
+    FileSerializer.new(object.files)
+  end
 end
