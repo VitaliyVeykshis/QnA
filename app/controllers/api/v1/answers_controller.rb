@@ -2,6 +2,7 @@ class Api::V1::AnswersController < Api::V1::BaseController
   before_action -> { authorize Answer }
 
   expose :question, find: -> { find_question }
+  expose :answers, -> { question.answers }
   expose :answer
 
   SHOW_OPTIONS = {
@@ -19,9 +20,37 @@ class Api::V1::AnswersController < Api::V1::BaseController
     render json: AnswerSerializer.new(answer, SHOW_OPTIONS).serialized_json
   end
 
+  def create
+    answers << answer
+    answer.user = current_user
+    if answer.save
+      render json: AnswerSerializer.new(answer).serialized_json, status: :created
+      broadcast
+    else
+      render_errors_json
+    end
+  end
+
   private
 
   def find_question
     answer&.question || Question.find(params[:question_id])
+  end
+
+  def answer_params
+    params.require(:answer).permit(:body,
+                                   files: [],
+                                   links_attributes: %i[name url])
+  end
+
+  def broadcast
+    AnswersChannel.broadcast_to(
+      question,
+      answer: GetAnswerData.call(answer: answer).data
+    )
+  end
+
+  def render_errors_json
+    render json: answer.errors, status: :unprocessable_entity
   end
 end

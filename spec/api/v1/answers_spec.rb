@@ -95,4 +95,88 @@ describe 'Answers API', type: :request do
       end
     end
   end
+
+  describe 'POST #create /api/v1/questions/:id/answers' do
+    let(:question) { create(:question) }
+    let(:method) { :post }
+    let(:api_path) { "/api/v1/questions/#{question.id}/answers" }
+
+    it_behaves_like 'API Authorizable'
+
+    context 'when access is authorized' do
+      let(:user) { create(:user) }
+      let(:addition) { { answer: attributes_for(:answer) } }
+      let(:options) { json_options(user: user, addition: addition) }
+
+      it 'returns 200 status' do
+        do_request(method, api_path, options)
+
+        expect(response).to be_successful
+      end
+
+      context 'when valid attributs' do
+        it 'saves new answer in database' do
+          expect { do_request(method, api_path, options) }
+            .to change(Answer, :count).by(1)
+        end
+
+        it 'sets current_user as answer author' do
+          expect { do_request(method, api_path, options) }
+            .to change(user.answers, :count).by(1)
+        end
+
+        it 'links the new answer with question' do
+          expect { do_request(method, api_path, options) }
+            .to change(question.answers, :count).by(1)
+        end
+
+        it "broadcasts new answer to question channel" do
+          answer_attributes = attributes_for(:answer)
+          addition = { question_id: question, answer: answer_attributes }
+          options = json_options(user: user, addition: addition)
+          expected = { answer: a_hash_including(answer_attributes) }
+
+          expect do
+            do_request(method, api_path, options)
+          end.to have_broadcasted_to(question).from_channel(AnswersChannel).with(include(expected))
+        end
+
+        it 'renders json with answer' do
+          do_request(method, api_path, options)
+
+          answer_json = AnswerSerializer.new(Answer.last).serialized_json
+
+          expect(response_json.to_json).to eq answer_json
+        end
+
+        it 'renders json with status :created' do
+          do_request(method, api_path, options)
+
+          expect(response).to have_http_status :created
+        end
+      end
+
+      context 'when invalid attributs' do
+        let(:addition) { { answer: attributes_for(:answer, :invalid) } }
+        let(:options) { json_options(user: user, addition: addition) }
+
+        it 'does not save new answer in database' do
+          expect { do_request(method, api_path, options) }
+            .not_to change(Answer, :count)
+        end
+
+        it 'renders json with error message' do
+          do_request(method, api_path, options)
+
+          expect(response.body).to eq "{\"body\":[\"can't be blank\"]}"
+        end
+
+        it 'renders json with status :unprocessable_entity' do
+          do_request(method, api_path, options)
+
+          expect(response).to have_http_status :unprocessable_entity
+        end
+      end
+    end
+  end
 end
