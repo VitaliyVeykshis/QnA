@@ -35,6 +35,11 @@ class Api::V1::AnswersController < Api::V1::BaseController
     answer.update(answer_params) ? (head :no_content) : render_errors_json
   end
 
+  def destroy
+    message = 'Answer deleted.'
+    render json: { message: message }, status: :ok if answer.destroy
+  end
+
   private
 
   def find_question

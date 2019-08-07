@@ -250,4 +250,51 @@ describe 'Answers API', type: :request do
       end
     end
   end
+
+  describe 'DELETE #destroy /api/v1/answers/:id' do
+    let!(:answer) { create(:answer) }
+    let(:method) { :delete }
+    let(:api_path) { "/api/v1/answers/#{answer.id}" }
+
+    it_behaves_like 'API Authorizable'
+
+    context 'when access is authorized' do
+      context 'when author' do
+        let(:user) { answer.user }
+        let(:options) { json_options(user: user) }
+
+        it 'returns 200 status' do
+          do_request(method, api_path, options)
+          expect(response).to be_successful
+        end
+
+        it 'deletes answer' do
+          expect { do_request(method, api_path, options) }
+            .to change(Answer, :count).by(-1)
+        end
+
+        it 'renders json with message' do
+          message = 'Answer deleted.'
+
+          do_request(method, api_path, options)
+          expect(response_json.dig(:message)).to eq message
+        end
+      end
+
+      context 'when not author' do
+        let(:options) { json_options }
+
+        it 'does not delete answer' do
+          expect { do_request(method, api_path, options) }
+            .not_to change(Answer, :count)
+        end
+
+        it 'response with status :forbidden' do
+          do_request(method, api_path, options)
+
+          expect(response).to have_http_status :forbidden
+        end
+      end
+    end
+  end
 end
