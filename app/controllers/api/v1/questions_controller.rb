@@ -38,6 +38,11 @@ class Api::V1::QuestionsController < Api::V1::BaseController
     end
   end
 
+  def destroy
+    question.destroy
+    render json: { message: 'Question deleted.' }, status: :ok
+  end
+
   private
 
   def render_errors_json
@@ -49,6 +54,8 @@ class Api::V1::QuestionsController < Api::V1::BaseController
   end
 
   def question_params
-    params.require(:question).permit(:title, :body, links_attributes: %i[name url])
+    params.require(:question).permit(:title,
+                                     :body,
+                                     links_attributes: %i[name url])
   end
 end

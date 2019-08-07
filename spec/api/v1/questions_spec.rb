@@ -219,7 +219,7 @@ describe 'Questions API', type: :request do
           expect(question.body).to eq 'New body'
         end
 
-        it 'renders json with question' do
+        it 'renders json with updated question' do
           do_request(method, api_path, options)
 
           question_json = QuestionSerializer.new(Question.last).serialized_json
@@ -275,6 +275,61 @@ describe 'Questions API', type: :request do
         end
 
         it 'response status :forbidden' do
+          do_request(method, api_path, options)
+
+          expect(response).to have_http_status :forbidden
+        end
+      end
+    end
+  end
+
+  describe 'DELETE #destroy /api/v1/questions' do
+    let!(:question) { create(:question) }
+    let(:method) { :delete }
+    let(:api_path) { "/api/v1/questions/#{question.id}" }
+
+    it_behaves_like 'API Authorizable'
+
+    context 'when access is authorized' do
+      let(:user) { question.user }
+      let(:access_token) { create(:access_token, resource_owner_id: user.id) }
+      let(:options) do
+        { params: { access_token: access_token.token,
+                    format: :json } }
+      end
+
+      it 'returns 200 status' do
+        do_request(method, api_path, options)
+        expect(response).to be_successful
+      end
+
+      context 'when author' do
+        it 'deletes question' do
+          expect { do_request(method, api_path, options) }
+            .to change(Question, :count).by(-1)
+        end
+
+        it 'renders json with message' do
+          message = 'Question deleted.'
+
+          do_request(method, api_path, options)
+          expect(response_json.dig(:message)).to eq message
+        end
+      end
+
+      context 'when not author' do
+        let(:access_token) { create(:access_token, resource_owner_id: create(:user).id) }
+        let(:options) do
+          { params: { access_token: access_token.token,
+                      format: :json } }
+        end
+
+        it 'does not delete question' do
+          expect { do_request(method, api_path, options) }
+            .not_to change(Question, :count)
+        end
+
+        it 'response with status :forbidden' do
           do_request(method, api_path, options)
 
           expect(response).to have_http_status :forbidden
