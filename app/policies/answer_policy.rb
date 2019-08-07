@@ -1,6 +1,10 @@
 class AnswerPolicy < ApplicationPolicy
   include VotedPolicy
 
+  def index?
+    true
+  end
+
   def show?
     true
   end
