@@ -31,16 +31,12 @@ class Api::V1::QuestionsController < Api::V1::BaseController
   end
 
   def update
-    if question.update(question_params)
-      render json: QuestionSerializer.new(question).serialized_json, status: :ok
-    else
-      render_errors_json
-    end
+    question.update(question_params) ? (head :no_content) : render_errors_json
   end
 
   def destroy
-    question.destroy
-    render json: { message: 'Question deleted.' }, status: :ok
+    message = 'Question deleted.'
+    render json: { message: message }, status: :ok if question.destroy
   end
 
   private

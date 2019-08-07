@@ -204,18 +204,10 @@ describe 'Questions API', type: :request do
           expect(question.body).to eq 'New body'
         end
 
-        it 'renders json with updated question' do
+        it 'renders json with status :no_content' do
           do_request(method, api_path, options)
 
-          question_json = QuestionSerializer.new(Question.last).serialized_json
-
-          expect(response_json.to_json).to eq question_json
-        end
-
-        it 'renders json with status :ok' do
-          do_request(method, api_path, options)
-
-          expect(response).to have_http_status :ok
+          expect(response).to have_http_status :no_content
         end
       end
 
