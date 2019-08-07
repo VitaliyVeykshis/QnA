@@ -1,5 +1,5 @@
 class Api::V1::QuestionsController < Api::V1::BaseController
-  before_action -> { authorize Question }
+  before_action -> { authorize question }
 
   expose :questions, -> { Question.all }
   expose :question
@@ -25,6 +25,14 @@ class Api::V1::QuestionsController < Api::V1::BaseController
     if question.save
       render json: QuestionSerializer.new(question).serialized_json, status: :created
       broadcast
+    else
+      render_errors_json
+    end
+  end
+
+  def update
+    if question.update(question_params)
+      render json: QuestionSerializer.new(question).serialized_json, status: :ok
     else
       render_errors_json
     end

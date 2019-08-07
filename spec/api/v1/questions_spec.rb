@@ -182,4 +182,104 @@ describe 'Questions API', type: :request do
       end
     end
   end
+
+  describe 'PATCH #update /api/v1/questions' do
+    let(:question) { create(:question) }
+    let(:method) { :patch }
+    let(:api_path) { "/api/v1/questions/#{question.id}" }
+
+    it_behaves_like 'API Authorizable'
+
+    context 'when access is authorized' do
+      let(:user) { question.user }
+      let(:access_token) { create(:access_token, resource_owner_id: user.id) }
+      let(:options) do
+        { params: { question: attributes_for(:question),
+                    access_token: access_token.token,
+                    format: :json } }
+      end
+
+      it 'returns 200 status' do
+        do_request(method, api_path, options)
+
+        expect(response).to be_successful
+      end
+
+      context 'when author with valid attributes' do
+        let(:options) do
+          { params: { question: attributes_for(:question, :new),
+                      access_token: access_token.token,
+                      format: :json } }
+        end
+
+        it 'changes question attributes' do
+          do_request(method, api_path, options)
+          question.reload
+          expect(question.title).to eq 'New title'
+          expect(question.body).to eq 'New body'
+        end
+
+        it 'renders json with question' do
+          do_request(method, api_path, options)
+
+          question_json = QuestionSerializer.new(Question.last).serialized_json
+
+          expect(response_json.to_json).to eq question_json
+        end
+
+        it 'renders json with status :ok' do
+          do_request(method, api_path, options)
+
+          expect(response).to have_http_status :ok
+        end
+      end
+
+      context 'when author with invalid attributes' do
+        let(:options) do
+          { params: { question: attributes_for(:question, :invalid),
+                      access_token: access_token.token,
+                      format: :json } }
+        end
+
+        it 'does not change question attributes' do
+          expect { do_request(method, api_path, options) }
+            .to not_change(question, :title)
+            .and not_change(question, :body)
+        end
+
+        it 'renders json with error message' do
+          do_request(method, api_path, options)
+
+          expect(response.body).to eq "{\"title\":[\"can't be blank\"]}"
+        end
+
+        it 'renders json with status :unprocessable_entity' do
+          do_request(method, api_path, options)
+
+          expect(response).to have_http_status :unprocessable_entity
+        end
+      end
+
+      context 'when not author' do
+        let(:access_token) { create(:access_token, resource_owner_id: create(:user).id) }
+        let(:options) do
+          { params: { question: attributes_for(:question, :invalid),
+                      access_token: access_token.token,
+                      format: :json } }
+        end
+
+        it 'does not change question attributes' do
+          expect { do_request(method, api_path, options) }
+            .to not_change(question, :title)
+            .and not_change(question, :body)
+        end
+
+        it 'response status :forbidden' do
+          do_request(method, api_path, options)
+
+          expect(response).to have_http_status :forbidden
+        end
+      end
+    end
+  end
 end
