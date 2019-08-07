@@ -9,12 +9,11 @@ describe 'Pofiles API', type: :request do
 
     context 'when access is authorized' do
       let(:me) { create(:user) }
+      let(:options) { json_options(user: me) }
 
-      before { do_request(method, api_path, json_options(user: me)) }
+      it_behaves_like 'API success response', :ok
 
-      it 'returns 200 status' do
-        expect(response).to be_successful
-      end
+      before { do_request(method, api_path, options) }
 
       it 'returns all public fields' do
         %i[id email created_at updated_at].each do |attr|
@@ -40,8 +39,11 @@ describe 'Pofiles API', type: :request do
       let(:me) { create(:user) }
       let!(:users) { create_list(:user, 3) }
       let(:users_list) { response_json.dig(:data) }
+      let(:options) { json_options(user: me) }
 
-      before { do_request(method, api_path, json_options(user: me)) }
+      it_behaves_like 'API success response', :ok
+
+      before { do_request(method, api_path, options) }
 
       it 'returns list of users' do
         expect(users_list.size).to eq User.where.not(id: me.id).count

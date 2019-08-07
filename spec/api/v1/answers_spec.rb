@@ -13,12 +13,11 @@ describe 'Answers API', type: :request do
       let(:answer) { answers.first }
       let(:answers_json) { response_json.dig(:data) }
       let(:answer_json) { answers_json.first }
+      let(:options) { json_options }
 
-      before { do_request(method, api_path, json_options) }
+      it_behaves_like 'API success response', :ok
 
-      it 'returns 200 status' do
-        expect(response).to be_successful
-      end
+      before { do_request(method, api_path, options) }
 
       it 'returns list of answers' do
         expect(answers_json.size).to eq answers.size
@@ -46,12 +45,11 @@ describe 'Answers API', type: :request do
 
     context 'when access is authorized' do
       let(:answer_json) { response_json.dig(:data) }
+      let(:options) { json_options }
 
-      before { do_request(method, api_path, json_options) }
+      it_behaves_like 'API success response', :ok
 
-      it 'returns 200 status' do
-        expect(response).to be_successful
-      end
+      before { do_request(method, api_path, options) }
 
       it 'returns all public fields' do
         %i[id body question_id user_id accepted created_at updated_at].each do |attr|
@@ -108,13 +106,9 @@ describe 'Answers API', type: :request do
       let(:addition) { { answer: attributes_for(:answer) } }
       let(:options) { json_options(user: user, addition: addition) }
 
-      it 'returns 200 status' do
-        do_request(method, api_path, options)
-
-        expect(response).to be_successful
-      end
-
       context 'when valid attributs' do
+        it_behaves_like 'API success response', :created
+
         it 'saves new answer in database' do
           expect { do_request(method, api_path, options) }
             .to change(Answer, :count).by(1)
@@ -147,12 +141,6 @@ describe 'Answers API', type: :request do
           answer_json = AnswerSerializer.new(Answer.last).serialized_json
 
           expect(response_json.to_json).to eq answer_json
-        end
-
-        it 'renders json with status :created' do
-          do_request(method, api_path, options)
-
-          expect(response).to have_http_status :created
         end
       end
 
@@ -194,15 +182,7 @@ describe 'Answers API', type: :request do
         let(:addition) { { answer: attributes_for(:answer, :new) } }
         let(:options) { json_options(user: user, addition: addition) }
 
-        it 'returns 200 status' do
-          do_request(method, api_path, options)
-          expect(response).to be_successful
-        end
-
-        it 'renders json with status :no_content' do
-          do_request(method, api_path, options)
-          expect(response).to have_http_status :no_content
-        end
+        it_behaves_like 'API success response', :no_content
 
         it 'changes answer attributes' do
           do_request(method, api_path, options)
@@ -263,10 +243,7 @@ describe 'Answers API', type: :request do
         let(:user) { answer.user }
         let(:options) { json_options(user: user) }
 
-        it 'returns 200 status' do
-          do_request(method, api_path, options)
-          expect(response).to be_successful
-        end
+        it_behaves_like 'API success response', :ok
 
         it 'deletes answer' do
           expect { do_request(method, api_path, options) }

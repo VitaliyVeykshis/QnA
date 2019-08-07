@@ -11,12 +11,11 @@ describe 'Questions API', type: :request do
       let!(:questions) { create_list(:question, 2) }
       let(:question) { questions.first }
       let(:question_json) { response_json.dig(:data).first }
+      let(:options) { json_options }
 
-      before { do_request(method, api_path, json_options) }
+      it_behaves_like 'API success response', :ok
 
-      it 'returns 200 status' do
-        expect(response).to be_successful
-      end
+      before { do_request(method, api_path, options) }
 
       it 'returns list of questions' do
         expect(response_json.dig(:data).size).to eq 2
@@ -47,12 +46,11 @@ describe 'Questions API', type: :request do
 
     context 'when access is authorized' do
       let(:question_json) { response_json.dig(:data) }
+      let(:options) { json_options }
 
-      before { do_request(method, api_path, json_options) }
+      it_behaves_like 'API success response', :ok
 
-      it 'returns 200 status' do
-        expect(response).to be_successful
-      end
+      before { do_request(method, api_path, options) }
 
       it 'returns all public fields' do
         %i[id title body user_id created_at updated_at].each do |attr|
@@ -105,16 +103,13 @@ describe 'Questions API', type: :request do
 
     context 'when access is authorized' do
       let(:user) { create(:user) }
-      let(:addition) { { question: attributes_for(:question) } }
-      let(:options) { json_options(user: user, addition: addition) }
-
-      it 'returns 200 status' do
-        do_request(method, api_path, options)
-
-        expect(response).to be_successful
-      end
 
       context 'when valid attributs' do
+        let(:addition) { { question: attributes_for(:question) } }
+        let(:options) { json_options(user: user, addition: addition) }
+
+        it_behaves_like 'API success response', :created
+
         it 'saves new question in database' do
           expect { do_request(method, api_path, options) }
             .to change(Question, :count).by(1)
@@ -142,12 +137,6 @@ describe 'Questions API', type: :request do
           question_json = QuestionSerializer.new(Question.last).serialized_json
 
           expect(response_json.to_json).to eq question_json
-        end
-
-        it 'renders json with status :created' do
-          do_request(method, api_path, options)
-
-          expect(response).to have_http_status :created
         end
       end
 
@@ -184,30 +173,18 @@ describe 'Questions API', type: :request do
 
     context 'when access is authorized' do
       let(:user) { question.user }
-      let(:addition) { { question: attributes_for(:question) } }
-      let(:options) { json_options(user: user, addition: addition) }
-
-      it 'returns 200 status' do
-        do_request(method, api_path, options)
-
-        expect(response).to be_successful
-      end
 
       context 'when author with valid attributes' do
         let(:addition) { { question: attributes_for(:question, :new) } }
         let(:options) { json_options(user: user, addition: addition) }
+
+        it_behaves_like 'API success response', :no_content
 
         it 'changes question attributes' do
           do_request(method, api_path, options)
           question.reload
           expect(question.title).to eq 'New title'
           expect(question.body).to eq 'New body'
-        end
-
-        it 'renders json with status :no_content' do
-          do_request(method, api_path, options)
-
-          expect(response).to have_http_status :no_content
         end
       end
 
@@ -262,14 +239,12 @@ describe 'Questions API', type: :request do
 
     context 'when access is authorized' do
       let(:user) { question.user }
-      let(:options) { json_options(user: user) }
-
-      it 'returns 200 status' do
-        do_request(method, api_path, options)
-        expect(response).to be_successful
-      end
 
       context 'when author' do
+        let(:options) { json_options(user: user) }
+
+        it_behaves_like 'API success response', :ok
+
         it 'deletes question' do
           expect { do_request(method, api_path, options) }
             .to change(Question, :count).by(-1)
