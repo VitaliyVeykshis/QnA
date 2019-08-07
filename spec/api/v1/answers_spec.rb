@@ -179,4 +179,75 @@ describe 'Answers API', type: :request do
       end
     end
   end
+
+  describe 'PATCH #update /api/v1/answers/:id' do
+    let(:answer) { create(:answer) }
+    let(:method) { :patch }
+    let(:api_path) { "/api/v1/answers/#{answer.id}" }
+
+    it_behaves_like 'API Authorizable'
+
+    context 'when access is authorized' do
+      let(:user) { answer.user }
+
+      context 'when author with valid attributes' do
+        let(:addition) { { answer: attributes_for(:answer, :new) } }
+        let(:options) { json_options(user: user, addition: addition) }
+
+        it 'returns 200 status' do
+          do_request(method, api_path, options)
+          expect(response).to be_successful
+        end
+
+        it 'renders json with status :no_content' do
+          do_request(method, api_path, options)
+          expect(response).to have_http_status :no_content
+        end
+
+        it 'changes answer attributes' do
+          do_request(method, api_path, options)
+          answer.reload
+          expect(answer.body).to eq 'New body'
+        end
+      end
+
+      context 'when author with invalid attributes' do
+        let(:addition) { { answer: attributes_for(:answer, :invalid) } }
+        let(:options) { json_options(user: user, addition: addition) }
+
+        it 'does not change answer attributes' do
+          expect { do_request(method, api_path, options) }
+            .to not_change(answer, :body)
+        end
+
+        it 'renders json with error message' do
+          do_request(method, api_path, options)
+
+          expect(response.body).to eq "{\"body\":[\"can't be blank\"]}"
+        end
+
+        it 'renders json with status :unprocessable_entity' do
+          do_request(method, api_path, options)
+
+          expect(response).to have_http_status :unprocessable_entity
+        end
+      end
+
+      context 'when not author' do
+        let(:addition) { { answer: attributes_for(:answer) } }
+        let(:options) { json_options(addition: addition) }
+
+        it 'does not change answer attributes' do
+          expect { do_request(method, api_path, options) }
+            .to not_change(answer, :body)
+        end
+
+        it 'response status :forbidden' do
+          do_request(method, api_path, options)
+
+          expect(response).to have_http_status :forbidden
+        end
+      end
+    end
+  end
 end

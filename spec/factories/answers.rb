@@ -34,6 +34,10 @@ FactoryBot.define do
       end
     end
 
+    trait :new do
+      body { 'New body' }
+    end
+
     factory :answer_with_attachments_link_gist, traits: %i[with_attachments with_link_and_gist]
   end
 end

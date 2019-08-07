@@ -1,5 +1,5 @@
 class Api::V1::AnswersController < Api::V1::BaseController
-  before_action -> { authorize Answer }
+  before_action -> { authorize answer }
 
   expose :question, find: -> { find_question }
   expose :answers, -> { question.answers }
@@ -29,6 +29,10 @@ class Api::V1::AnswersController < Api::V1::BaseController
     else
       render_errors_json
     end
+  end
+
+  def update
+    answer.update(answer_params) ? (head :no_content) : render_errors_json
   end
 
   private
