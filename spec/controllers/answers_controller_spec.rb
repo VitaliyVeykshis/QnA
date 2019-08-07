@@ -9,15 +9,17 @@ RSpec.describe AnswersController, type: :controller do
 
   describe 'POST #create' do
     context 'with valid attributes' do
+      let(:options) { { question_id: question, answer: attributes_for(:answer) } }
+
       it 'saves a new answer in the database' do
         expect do
-          post :create, params: { question_id: question, answer: attributes_for(:answer) }, format: :js
+          post :create, params: options, format: :js
         end.to change(question.answers, :count).by(1)
       end
 
       it 'links the new answer with author' do
         expect do
-          post :create, params: { question_id: question, answer: attributes_for(:answer) }, format: :js
+          post :create, params: options, format: :js
         end.to change(user.answers, :count).by(1)
       end
 
@@ -31,21 +33,23 @@ RSpec.describe AnswersController, type: :controller do
       end
 
       it 'renders answer create template' do
-        post :create, params: { question_id: question, answer: attributes_for(:answer) }, format: :js
+        post :create, params: options, format: :js
 
         expect(response).to render_template :create
       end
     end
 
     context 'with invalid attributes' do
+      let(:options) { { question_id: question, answer: attributes_for(:answer, :invalid) } }
+
       it 'does not save the answer' do
         expect do
-          post :create, params: { question_id: question, answer: attributes_for(:answer, :invalid) }, format: :js
+          post :create, params: options, format: :js
         end.not_to change(Answer, :count)
       end
 
       it 'renders answer create template' do
-        post :create, params: { question_id: question, answer: attributes_for(:answer, :invalid) }, format: :js
+        post :create, params: options, format: :js
 
         expect(response).to render_template :create
       end
@@ -83,27 +87,31 @@ RSpec.describe AnswersController, type: :controller do
 
   describe 'PATCH #update' do
     context 'when author with valid attributes' do
+      let(:options) { { id: answer, answer: { body: 'new body' } } }
+
       it 'changes answer attributes' do
-        patch :update, params: { id: answer, answer: { body: 'new body' } }, format: :js
+        patch :update, params: options, format: :js
         answer.reload
         expect(answer.body).to eq 'new body'
       end
 
       it 'renders update template' do
-        patch :update, params: { id: answer, answer: { body: 'new body' } }, format: :js
+        patch :update, params: options, format: :js
         expect(response).to render_template :update
       end
     end
 
     context 'when author with invalid attributes' do
+      let(:options) { { id: answer, answer: attributes_for(:answer, :invalid) } }
+
       it 'does not change answer attributes' do
         expect do
-          patch :update, params: { id: answer, answer: attributes_for(:answer, :invalid) }, format: :js
+          patch :update, params: options, format: :js
         end.not_to change(answer, :body)
       end
 
       it 'renders update template' do
-        patch :update, params: { id: answer, answer: attributes_for(:answer, :invalid) }, format: :js
+        patch :update, params: options , format: :js
         expect(response).to render_template :update
       end
     end
