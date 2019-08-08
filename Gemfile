@@ -61,6 +61,10 @@ gem 'omniauth-github'
 gem 'omniauth-vkontakte'
 # Authorization
 gem 'pundit'
+# OAuth 2 provider functionality
+gem 'doorkeeper'
+# JSON:API serializer for Ruby Objects
+gem 'fast_jsonapi'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console

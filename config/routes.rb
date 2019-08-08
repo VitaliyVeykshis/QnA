@@ -1,4 +1,8 @@
 Rails.application.routes.draw do
+  use_doorkeeper do
+    controllers applications: 'oauth/applications'
+  end
+
   mount ActionCable.server => '/cable'
   devise_for :users,
              controllers: {
@@ -40,4 +44,16 @@ Rails.application.routes.draw do
   end
 
   resources :links, only: :destroy
+
+  namespace :api do
+    namespace :v1 do
+      resources :profiles, only: %i[index] do
+        get :me, on: :collection
+      end
+
+      resources :questions, only: %i[index show create update destroy], shallow: true do
+        resources :answers, only: %i[index show create update destroy]
+      end
+    end
+  end
 end

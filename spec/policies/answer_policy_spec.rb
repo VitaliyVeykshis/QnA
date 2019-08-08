@@ -7,7 +7,7 @@ RSpec.describe AnswerPolicy, type: :policy do
     let(:user) { nil }
     let(:answer) { Answer.new }
 
-    it { is_expected.to permit_actions(%i[show]) }
+    it { is_expected.to permit_actions(%i[show index]) }
     it { is_expected.to forbid_actions(%i[create update destroy vote_up vote_down accept]) }
   end
 
@@ -16,7 +16,7 @@ RSpec.describe AnswerPolicy, type: :policy do
     let(:question) { create(:question, user: create(:user)) }
     let(:answer) { create(:answer, question: question, user: create(:user)) }
 
-    it { is_expected.to permit_actions(%i[show create vote_up vote_down]) }
+    it { is_expected.to permit_actions(%i[show index create vote_up vote_down]) }
     it { is_expected.to forbid_actions(%i[update destroy accept]) }
   end
 
@@ -25,7 +25,7 @@ RSpec.describe AnswerPolicy, type: :policy do
     let(:question) { create(:question, user: create(:user)) }
     let(:answer) { create(:answer, question: question, user: user) }
 
-    it { is_expected.to permit_actions(%i[show create update destroy]) }
+    it { is_expected.to permit_actions(%i[show index create update destroy]) }
     it { is_expected.to forbid_actions(%i[vote_up vote_down]) }
   end
 

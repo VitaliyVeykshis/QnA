@@ -1,6 +1,8 @@
 FactoryBot.define do
   factory :answer do
     sequence(:body) { |n| "Answer#{n} body" }
+    association :user, factory: :user
+    association :question, factory: :question
 
     trait :invalid do
       body { nil }
@@ -30,6 +32,10 @@ FactoryBot.define do
           FactoryBot.build(:link)
         ]
       end
+    end
+
+    trait :new do
+      body { 'New body' }
     end
 
     factory :answer_with_attachments_link_gist, traits: %i[with_attachments with_link_and_gist]
