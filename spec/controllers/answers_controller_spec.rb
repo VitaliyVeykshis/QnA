@@ -32,6 +32,11 @@ RSpec.describe AnswersController, type: :controller do
         end.to have_broadcasted_to(question).from_channel(AnswersChannel).with(include(expected))
       end
 
+      it 'notifies question author about new answer' do
+        expect(NewAnswerJob).to receive(:perform_later).with(instance_of(Answer))
+        post :create, params: options, format: :js
+      end
+
       it 'renders answer create template' do
         post :create, params: options, format: :js
 

@@ -11,8 +11,11 @@ class AnswersController < ApplicationController
   def create
     answers << answer
     answer.user = current_user
-    answer.save
+
+    return unless answer.save
+
     broadcast
+    notify
   end
 
   def update
@@ -44,5 +47,9 @@ class AnswersController < ApplicationController
 
   def find_question
     answer&.question || Question.find(params[:question_id])
+  end
+
+  def notify
+    NewAnswerJob.perform_later(answer)
   end
 end
