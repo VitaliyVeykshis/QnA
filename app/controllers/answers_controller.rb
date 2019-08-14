@@ -8,6 +8,8 @@ class AnswersController < ApplicationController
   expose :question, find: -> { find_question }
   expose :answers, -> { question.answers }
 
+  delegate :destroy, to: :answer
+
   def create
     answers << answer
     answer.user = current_user
@@ -20,10 +22,6 @@ class AnswersController < ApplicationController
 
   def update
     answer.update(answer_params)
-  end
-
-  def destroy
-    answer.destroy
   end
 
   def accept
