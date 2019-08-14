@@ -26,6 +26,20 @@ RSpec.describe Question, type: :model do
     it { should validate_presence_of :body }
   end
 
+  describe '.created_last_24_hours' do
+    let!(:questions) { create_list(:question, 2, user: user) }
+
+    it 'returns questions created last 24 hours' do
+      Timecop.travel(1.day)
+      expect(Question.created_last_24_hours).to include(*questions)
+    end
+
+    it 'not return questions older then last 24 hours' do
+      Timecop.travel(3.days)
+      expect(Question.created_last_24_hours).not_to include(*questions)
+    end
+  end
+
   describe '#accepted_answer' do
     it 'return accepted answer' do
       answers[1].accept!

@@ -14,6 +14,10 @@ class Question < ApplicationRecord
 
   validates :title, :body, presence: true
 
+  scope :created_last_24_hours, lambda {
+    where(created_at: 1.day.ago.midnight..Time.current.midnight)
+  }
+
   def accepted_answer
     answers.find_by(accepted: true)
   end
