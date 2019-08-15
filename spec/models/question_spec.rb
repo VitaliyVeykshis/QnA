@@ -8,6 +8,8 @@ RSpec.describe Question, type: :model do
   describe 'Associations' do
     it { should have_many(:answers).dependent(:destroy) }
     it { should have_many(:links).dependent(:destroy) }
+    it { should have_many(:subscriptions).dependent(:destroy) }
+    it { should have_many(:subscribers).through(:subscriptions).source(:user) }
     it { should have_one(:badge).dependent(:destroy) }
     it { should belong_to :user }
   end
@@ -24,6 +26,10 @@ RSpec.describe Question, type: :model do
   describe 'Validations' do
     it { should validate_presence_of :title }
     it { should validate_presence_of :body }
+  end
+
+  it 'subscribes question author' do
+    expect(question.subscribers.first).to eq user
   end
 
   describe '.created_last_24_hours' do
@@ -44,6 +50,30 @@ RSpec.describe Question, type: :model do
     it 'return accepted answer' do
       answers[1].accept!
       expect(question.accepted_answer).to eq answers[1]
+    end
+  end
+
+  describe '#subscribe' do
+    let(:another_user) { create(:user) }
+
+    it 'adds subscriber' do
+      question.subscribe(another_user)
+
+      expect(question.subscribers).to include(another_user)
+    end
+  end
+
+  describe '#subscribed?' do
+    context 'when user is subscribed' do
+      it 'returns true' do
+        expect(question).to be_subscribed(user)
+      end
+    end
+
+    context "when user isn't subscribed" do
+      it 'returns false' do
+        expect(question).not_to be_subscribed(create(:user))
+      end
     end
   end
 

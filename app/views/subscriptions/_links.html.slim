@@ -1,0 +1,4 @@
+.subscription
+  - if policy([:subscriptions, question]).create?
+    = link_to 'Subscribe', question_subscriptions_path(question), method: :post
+    

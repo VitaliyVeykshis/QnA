@@ -16,6 +16,7 @@ class User < ApplicationRecord
   has_many :votes, dependent: :destroy
   has_many :comments, dependent: :destroy
   has_many :identities, dependent: :destroy
+  has_many :subscriptions, dependent: :destroy
   has_many :oauth_applications, dependent: :destroy, class_name: 'Doorkeeper::Application', as: :owner
 
   def self.find_for_oauth(auth)

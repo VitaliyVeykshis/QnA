@@ -3,8 +3,9 @@ class NewAnswer
 
   def call
     answer = context.answer
-    user = answer.question.user
 
-    NewAnswerMailer.notify(user, answer).deliver_later
+    answer.question.subscribers.find_each do |user|
+      NewAnswerMailer.notify(user, answer).deliver_later
+    end
   end
 end

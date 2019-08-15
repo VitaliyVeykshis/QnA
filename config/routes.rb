@@ -43,6 +43,8 @@ Rails.application.routes.draw do
     resources :answers, only: %i[create update destroy], concerns: %i[votable commentable] do
       patch :accept, on: :member
     end
+
+    resources :subscriptions, only: %i[create]
   end
 
   scope :active_storage, module: :active_storage, as: :active_storage do

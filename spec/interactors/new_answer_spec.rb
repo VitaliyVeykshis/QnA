@@ -11,5 +11,16 @@ RSpec.describe NewAnswer, type: :interactor do
 
       NewAnswer.call(answer: answer)
     end
+
+    it 'sends new answer notify to all subscribed users' do
+      question.subscribers << create_list(:user, 2)
+
+      question.subscribers.each do |subscriber|
+        expect(NewAnswerMailer)
+          .to receive(:notify).with(subscriber, answer).and_call_original
+      end
+
+      NewAnswer.call(answer: answer)
+    end
   end
 end
