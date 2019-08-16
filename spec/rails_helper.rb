@@ -52,6 +52,7 @@ RSpec.configure do |config|
   config.include Helpers::ApiHelpers, type: :request
   config.include Helpers::JsonHelpers
   config.include Helpers::WaitForAjax, type: :feature
+  config.include Helpers::ControllerHelpers, type: :controller
 
   Capybara.javascript_driver = :selenium_chrome_headless
 
