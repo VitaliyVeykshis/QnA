@@ -33,4 +33,8 @@ class Question < ApplicationRecord
   def subscribed?(user)
     subscribers.exists?(user.id)
   end
+
+  def subscription_of(user)
+    subscriptions.find_by(user_id: user&.id)
+  end
 end

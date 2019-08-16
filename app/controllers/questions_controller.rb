@@ -10,6 +10,7 @@ class QuestionsController < ApplicationController
   expose :question, scope: -> { Question.with_attached_files }
   expose :answers, -> { question.answers }
   expose :answer, -> { answers.build }
+  expose :subscription, -> { question.subscription_of(current_user) }
 
   def create
     question.user = current_user

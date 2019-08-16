@@ -35,4 +35,29 @@ RSpec.describe SubscriptionsController, type: :controller do
       end
     end
   end
+
+  describe 'DELETE #destroy' do
+    let(:options) { { id: question.subscriptions.first } }
+    let(:request_params) { { method: :delete, action: :destroy, options: options } }
+
+    context 'when user is subscription owner' do
+      let!(:question) { create(:question, user: user) }
+
+      it 'deletes subscription' do
+        expect do
+          do_request(request_params)
+        end.to change(Subscription, :count).by(-1)
+      end
+    end
+
+    context 'when user is not subscription owner' do
+      let!(:question) { create(:question) }
+
+      it 'does not deletes subscription' do
+        expect do
+          do_request(request_params)
+        end.not_to change(Subscription, :count)
+      end
+    end
+  end
 end

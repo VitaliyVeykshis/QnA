@@ -77,6 +77,22 @@ RSpec.describe Question, type: :model do
     end
   end
 
+  describe '#subscription_of' do
+    context 'when user is subscribed' do
+      it 'returns subscription' do
+        expect(question.subscription_of(user)).to eq user.subscriptions.first
+      end
+    end
+
+    context "when user isn't subscribed" do
+      let(:question) { create(:question) }
+
+      it 'returns nil' do
+        expect(question.subscription_of(user)).to be_nil
+      end
+    end
+  end
+
   describe 'Concerns' do
     let(:resource) { create(:question, user: user) }
 

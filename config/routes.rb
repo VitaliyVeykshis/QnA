@@ -44,7 +44,7 @@ Rails.application.routes.draw do
       patch :accept, on: :member
     end
 
-    resources :subscriptions, only: %i[create]
+    resources :subscriptions, only: %i[create destroy]
   end
 
   scope :active_storage, module: :active_storage, as: :active_storage do

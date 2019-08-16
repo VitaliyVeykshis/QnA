@@ -1,12 +1,20 @@
 class SubscriptionsController < ApplicationController
-  before_action -> { authorize [:subscriptions, question] }
-
   expose :subscription
   expose :question, -> { set_question }
 
   def create
+    authorize [:subscriptions, question]
+
     question.subscribe(current_user)
     flash[:notice] = 'You have successfully subscribed.'
+    redirect_to question
+  end
+
+  def destroy
+    authorize subscription
+
+    subscription.destroy
+    flash[:notice] = 'You have successfully unsubscribed.'
     redirect_to question
   end
 
