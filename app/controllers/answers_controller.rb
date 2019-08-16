@@ -13,11 +13,7 @@ class AnswersController < ApplicationController
   def create
     answers << answer
     answer.user = current_user
-
-    return unless answer.save
-
-    broadcast
-    notify
+    answer.save
   end
 
   def update
@@ -36,18 +32,7 @@ class AnswersController < ApplicationController
                                    links_attributes: %i[name url])
   end
 
-  def broadcast
-    AnswersChannel.broadcast_to(
-      question,
-      answer: GetAnswerData.call(answer: answer).data
-    )
-  end
-
   def find_question
     answer&.question || Question.find(params[:question_id])
-  end
-
-  def notify
-    NewAnswerJob.perform_later(answer)
   end
 end

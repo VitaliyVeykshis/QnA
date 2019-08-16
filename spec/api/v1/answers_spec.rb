@@ -124,17 +124,6 @@ describe 'Answers API', type: :request do
             .to change(question.answers, :count).by(1)
         end
 
-        it "broadcasts new answer to question channel" do
-          answer_attributes = attributes_for(:answer)
-          addition = { question_id: question, answer: answer_attributes }
-          options = json_options(user: user, addition: addition)
-          expected = { answer: a_hash_including(answer_attributes) }
-
-          expect do
-            do_request(method, api_path, options)
-          end.to have_broadcasted_to(question).from_channel(AnswersChannel).with(include(expected))
-        end
-
         it 'renders json with answer' do
           do_request(method, api_path, options)
 
