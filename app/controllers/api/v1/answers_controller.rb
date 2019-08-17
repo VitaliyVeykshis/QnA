@@ -25,7 +25,6 @@ class Api::V1::AnswersController < Api::V1::BaseController
     answer.user = current_user
     if answer.save
       render json: AnswerSerializer.new(answer).serialized_json, status: :created
-      broadcast
     else
       render_errors_json
     end
@@ -50,13 +49,6 @@ class Api::V1::AnswersController < Api::V1::BaseController
     params.require(:answer).permit(:body,
                                    files: [],
                                    links_attributes: %i[name url])
-  end
-
-  def broadcast
-    AnswersChannel.broadcast_to(
-      question,
-      answer: GetAnswerData.call(answer: answer).data
-    )
   end
 
   def render_errors_json

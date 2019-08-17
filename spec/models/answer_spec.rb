@@ -15,7 +15,8 @@ RSpec.describe Answer, type: :model do
 
   describe 'Attachment association' do
     it 'have many attached files' do
-      expect(Answer.new.files).to be_an_instance_of(ActiveStorage::Attached::Many)
+      expect(Answer.new.files)
+        .to be_an_instance_of(ActiveStorage::Attached::Many)
     end
   end
 
@@ -23,6 +24,32 @@ RSpec.describe Answer, type: :model do
 
   describe 'Validations' do
     it { should validate_presence_of :body }
+  end
+
+  describe 'Callbacks' do
+    let!(:answer) { build(:answer, question: question) }
+
+    it 'after create broadcasts to question channel' do
+      expected = { answer: hash_including(answer.as_json(only: %i[body])) }
+
+      expect { answer.save }
+        .to have_broadcasted_to(question).from_channel(AnswersChannel)
+                                         .with(include(expected))
+    end
+
+    it 'after create broadcasts new answer to question channel' do
+      expect(GetAnswerData)
+        .to receive(:call).with(answer: answer).and_call_original
+
+      answer.save
+    end
+
+    it 'after create notifies subscribed users about new answer' do
+      expect(NewAnswerJob)
+        .to receive(:perform_later).with(answer).and_call_original
+
+      answer.save
+    end
   end
 
   describe '.accepted_first' do

@@ -65,6 +65,12 @@ gem 'pundit'
 gem 'doorkeeper'
 # JSON:API serializer for Ruby Objects
 gem 'fast_jsonapi'
+# Background processing
+gem 'sidekiq'
+# Sidekiq monitoring
+gem 'sinatra', require: false
+# Cron jobs
+gem 'whenever', require: false
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
@@ -95,6 +101,7 @@ group :test do
   gem 'capybara-email'
   # Pundit matchers
   gem 'pundit-matchers', '~> 1.6.0'
+  gem 'timecop'
 end
 
 

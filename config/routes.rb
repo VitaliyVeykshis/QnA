@@ -1,4 +1,10 @@
+require 'sidekiq/web'
+
 Rails.application.routes.draw do
+  # authenticate :user, lambda { |u| u.admin? } do
+  mount Sidekiq::Web => '/sidekiq'
+  # end
+
   use_doorkeeper do
     controllers applications: 'oauth/applications'
   end
@@ -37,6 +43,8 @@ Rails.application.routes.draw do
     resources :answers, only: %i[create update destroy], concerns: %i[votable commentable] do
       patch :accept, on: :member
     end
+
+    resources :subscriptions, only: %i[create destroy]
   end
 
   scope :active_storage, module: :active_storage, as: :active_storage do

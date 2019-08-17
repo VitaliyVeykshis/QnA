@@ -1,0 +1,6 @@
+.subscription
+  - if policy([:subscriptions, question]).create?
+    = link_to 'Subscribe', question_subscriptions_path(question), method: :post
+  - if subscription.present? && policy(subscription).destroy?
+    = link_to 'Unsubscribe', subscription_path(subscription), method: :delete
+    

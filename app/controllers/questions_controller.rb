@@ -10,13 +10,13 @@ class QuestionsController < ApplicationController
   expose :question, scope: -> { Question.with_attached_files }
   expose :answers, -> { question.answers }
   expose :answer, -> { answers.build }
+  expose :subscription, -> { question.subscription_of(current_user) }
 
   def create
     question.user = current_user
 
     if question.save
       redirect_to question, notice: 'Your question successfully created.'
-      broadcast
     else
       render_errors_json
     end
@@ -43,9 +43,5 @@ class QuestionsController < ApplicationController
 
   def render_errors_json
     render json: question.errors, status: :unprocessable_entity
-  end
-
-  def broadcast
-    ActionCable.server.broadcast('questions', question: question.as_json)
   end
 end

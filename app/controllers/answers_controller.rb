@@ -8,19 +8,16 @@ class AnswersController < ApplicationController
   expose :question, find: -> { find_question }
   expose :answers, -> { question.answers }
 
+  delegate :destroy, to: :answer
+
   def create
     answers << answer
     answer.user = current_user
     answer.save
-    broadcast
   end
 
   def update
     answer.update(answer_params)
-  end
-
-  def destroy
-    answer.destroy
   end
 
   def accept
@@ -33,13 +30,6 @@ class AnswersController < ApplicationController
     params.require(:answer).permit(:body,
                                    files: [],
                                    links_attributes: %i[name url])
-  end
-
-  def broadcast
-    AnswersChannel.broadcast_to(
-      question,
-      answer: GetAnswerData.call(answer: answer).data
-    )
   end
 
   def find_question

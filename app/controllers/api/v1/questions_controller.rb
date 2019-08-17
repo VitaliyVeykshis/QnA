@@ -24,7 +24,6 @@ class Api::V1::QuestionsController < Api::V1::BaseController
 
     if question.save
       render json: QuestionSerializer.new(question).serialized_json, status: :created
-      broadcast
     else
       render_errors_json
     end
@@ -43,10 +42,6 @@ class Api::V1::QuestionsController < Api::V1::BaseController
 
   def render_errors_json
     render json: question.errors, status: :unprocessable_entity
-  end
-
-  def broadcast
-    ActionCable.server.broadcast('questions', question: question.as_json)
   end
 
   def question_params

@@ -34,6 +34,8 @@ feature 'User can add links to answer', %q{
 
     click_on 'Post'
 
+    wait_for_ajax
+
     within '.answers' do
       expect(page).to have_link 'My gist', href: gist_url
       expect(page).to have_link 'Thinknetica', href: second_url

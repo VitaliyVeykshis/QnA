@@ -120,17 +120,6 @@ describe 'Questions API', type: :request do
             .to change(user.questions, :count).by(1)
         end
 
-        it "broadcasts new question to 'questions' channel" do
-          question_attributes = attributes_for(:question)
-          addition = { question: question_attributes }
-          options = json_options(user: user, addition: addition)
-          expected = { question: a_hash_including(question_attributes) }
-
-          expect do
-            do_request(method, api_path, options)
-          end.to have_broadcasted_to('questions').with(include(expected))
-        end
-
         it 'renders json with question' do
           do_request(method, api_path, options)
 

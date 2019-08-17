@@ -5,6 +5,7 @@ p= question.body
   p= link_to 'Edit', '#', class: 'edit-question-link', data: { question_id: question.id }
   p= link_to 'Delete question', question_path(question), method: :delete, data: {confirm: 'Are you sure?'}
   = render 'update_form', question: question
+= render 'subscriptions/links'
 = render 'links/index', resource: question
 = render 'badges/badge', badge: question.badge
 = render 'shared/vote_cell', resource: question
