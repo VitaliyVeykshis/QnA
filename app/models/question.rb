@@ -17,6 +17,7 @@ class Question < ApplicationRecord
   validates :title, :body, presence: true
 
   after_create { subscribe(user) }
+  after_create :broadcast
 
   scope :created_last_24_hours, lambda {
     where(created_at: 1.day.ago.midnight..Time.current.midnight)
@@ -36,5 +37,11 @@ class Question < ApplicationRecord
 
   def subscription_of(user)
     subscriptions.find_by(user_id: user&.id)
+  end
+
+  private
+
+  def broadcast
+    ActionCable.server.broadcast('questions', question: self.as_json)
   end
 end

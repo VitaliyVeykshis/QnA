@@ -28,8 +28,19 @@ RSpec.describe Question, type: :model do
     it { should validate_presence_of :body }
   end
 
-  it 'subscribes question author' do
-    expect(question.subscribers.first).to eq user
+  describe 'Callbacks' do
+    let(:question) { build(:question, user: user) }
+
+    it 'after_create subscribes question author' do
+      expect { question.save }.to change(user.subscriptions, :count).by(1)
+    end
+
+    it "broadcasts new question to 'questions' channel" do
+      expected = { question: hash_including(question.attributes.compact) }
+
+      expect { question.save }
+        .to have_broadcasted_to('questions').with(include(expected))
+    end
   end
 
   describe '.created_last_24_hours' do
