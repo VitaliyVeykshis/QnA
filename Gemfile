@@ -105,6 +105,7 @@ group :test do
   # Pundit matchers
   gem 'pundit-matchers', '~> 1.6.0'
   gem 'timecop'
+  gem 'database_cleaner'
 end
 
 
