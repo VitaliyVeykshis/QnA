@@ -1,0 +1,29 @@
+.search-bar {
+  float: none;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+.search-bar .form-control:focus {
+  border-color: #ced4da;
+  box-shadow:none;
+  -webkit-box-shadow: none;
+}
+.search-bar .custom-select:focus {
+  border-color: #ced4da;
+  box-shadow:none;
+  -webkit-box-shadow: none;
+}
+
+#search-query {
+  flex: 5 1 auto;
+}
+
+@media only screen and (max-width: 768px) {
+  .search-bar {
+    display: inline;
+    position: static;
+    padding: 3px 3px;
+  }
+}
