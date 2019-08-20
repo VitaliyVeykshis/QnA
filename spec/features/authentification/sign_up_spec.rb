@@ -32,7 +32,7 @@ feature 'User can sign up', %q{
     scenario 'Sign up with VKontakte' do
       click_on 'Sign in with Vkontakte'
 
-      within 'form' do
+      within '#new-outh-sign-up' do
         fill_in 'Email', with: 'user@test.com'
         click_on 'Sign up'
       end

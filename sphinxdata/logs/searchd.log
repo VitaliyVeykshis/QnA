@@ -1,0 +1,22 @@
+[Sun Aug 18 10:35:48.083 2019] [-1] watchdog: main process 33513 forked ok
+[Sun Aug 18 10:35:48.084 2019] [-1] listening on all interfaces, port=9312
+[Sun Aug 18 10:35:48.085 2019] [-1] listening on all interfaces, port=9306
+[Sun Aug 18 10:35:48.086 2019] [-1] prereading 0 indexes
+[Sun Aug 18 10:35:48.086 2019] [-1] WARNING: failed to set nodelay option: Operation not supported on socket
+[Sun Aug 18 10:35:48.086 2019] [-1] accepting connections
+[Sun Aug 18 10:35:48.087 2019] [-1] prereaded 0 indexes in 0.000 sec
+[Sun Aug 18 10:35:48.087 2019] [-1] WARNING: failed to set nodelay option: Operation not supported on socket
+[Sun Aug 18 10:37:07.044 2019] [-1] caught SIGTERM, shutting down
+[Sun Aug 18 10:37:07.188 2019] [-1] shutdown complete
+[Sun Aug 18 10:37:07.190 2019] [-1] watchdog: main process 33513 exited cleanly (exit code 0), shutting down
+[Sun Aug 18 10:48:14.741 2019] [-1] watchdog: main process 34898 forked ok
+[Sun Aug 18 10:48:14.746 2019] [-1] listening on all interfaces, port=9312
+[Sun Aug 18 10:48:14.746 2019] [-1] listening on all interfaces, port=9306
+[Sun Aug 18 10:48:14.749 2019] [-1] prereading 0 indexes
+[Sun Aug 18 10:48:14.749 2019] [-1] accepting connections
+[Sun Aug 18 10:48:14.749 2019] [-1] prereaded 0 indexes in 0.000 sec
+[Sun Aug 18 10:48:14.749 2019] [-1] WARNING: failed to set nodelay option: Operation not supported on socket
+[Sun Aug 18 10:48:15.752 2019] [-1] WARNING: last message repeated 1 times
+[Sun Aug 18 10:51:12.106 2019] [-1] caught SIGTERM, shutting down
+[Sun Aug 18 10:51:12.180 2019] [-1] shutdown complete
+[Sun Aug 18 10:51:12.181 2019] [-1] watchdog: main process 34898 exited cleanly (exit code 0), shutting down

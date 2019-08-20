@@ -1,6 +1,7 @@
 class Question < ApplicationRecord
   include Votable
   include Commentable
+  include Indexable
 
   belongs_to :user
   has_one :badge, dependent: :destroy
@@ -37,6 +38,10 @@ class Question < ApplicationRecord
 
   def subscription_of(user)
     subscriptions.find_by(user_id: user&.id)
+  end
+
+  def search_result
+    { title: title[0..20], body: body[0..100], link_to: self }
   end
 
   private

@@ -27,6 +27,7 @@ Rails.application.routes.draw do
 
   root to: 'questions#index'
   get 'badges/index'
+  get 'search', to: 'search#search', as: 'search'
 
   concern :votable do
     member do

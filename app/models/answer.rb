@@ -1,6 +1,7 @@
 class Answer < ApplicationRecord
   include Votable
   include Commentable
+  include Indexable
 
   belongs_to :question
   belongs_to :user
@@ -22,6 +23,10 @@ class Answer < ApplicationRecord
       update!(accepted: true)
       question.badge&.update!(user: user)
     end
+  end
+
+  def search_result
+    { title: question.title[0..20], body: body[0..100], link_to: question }
   end
 
   private

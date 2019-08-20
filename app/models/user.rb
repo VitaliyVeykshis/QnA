@@ -1,6 +1,6 @@
 class User < ApplicationRecord
-  # Include default devise modules. Others available are:
-  # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
+  include Indexable
+
   devise :database_authenticatable,
          :registerable,
          :recoverable,
@@ -33,5 +33,9 @@ class User < ApplicationRecord
 
   def voted_down_on?(resource)
     votes.exists?(votable: resource, vote_for: -1)
+  end
+
+  def search_result
+    { title: '', body: email, link_to: '' }
   end
 end

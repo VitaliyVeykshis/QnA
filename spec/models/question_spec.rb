@@ -104,6 +104,20 @@ RSpec.describe Question, type: :model do
     end
   end
 
+  describe '#search_result' do
+    it 'search_result contains title' do
+      expect(question.search_result[:title]).to eq question.title
+    end
+
+    it 'search_result contains body' do
+      expect(question.search_result[:body]).to eq question.body
+    end
+
+    it 'search_result contains link_to' do
+      expect(question.search_result[:link_to]).to eq question
+    end
+  end
+
   describe 'Concerns' do
     let(:resource) { create(:question, user: user) }
 

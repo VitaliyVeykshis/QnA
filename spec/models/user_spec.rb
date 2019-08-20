@@ -71,4 +71,10 @@ RSpec.describe User, type: :model do
       expect(user.voted_down_on?(question)).to be false
     end
   end
+
+  describe '#search_result' do
+    it 'search_result contains user email' do
+      expect(user.search_result[:body]).to eq user.email
+    end
+  end
 end
