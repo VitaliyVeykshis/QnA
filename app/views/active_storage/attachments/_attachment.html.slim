@@ -1,4 +1,4 @@
-.attachment id="attachment-#{file.id}"
-  = link_to file.filename.to_s, url_for(file)
+li.list-group-item.attachment id="attachment-#{file.id}"
+  = link_to file.filename.to_s, url_for(file), class: 'card-link'
   - if policy(file).destroy?
-    = link_to 'Delete', active_storage_attachment_path(file), method: :delete, data: { confirm: 'Are you sure?', remote: true }
+    = link_to 'Delete', active_storage_attachment_path(file), method: :delete, data: { confirm: 'Are you sure?', remote: true }, class: 'card-link'
