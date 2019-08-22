@@ -1,6 +1,8 @@
-.comments
-  = render resource.comments
-- if policy(resource).create?
-    .new-comment
-      = link_to 'add a comment', '', class: 'new-comment-link', data: { resource_class: resource.class.to_s.downcase, resource_id: resource.id }
-      = render 'comments/form', resource: resource
+li.list-group-item.comments class="#{resource.comments.persisted.any? ? '' : 'd-none'}" id="comments-#{resource.class.to_s.downcase}-#{resource.id}"
+  - if resource.comments.any?
+    = render resource.comments 
+- if policy(:comment).create?
+    li.list-group-item
+      .new-comment
+        = link_to 'add a comment', '', class: 'new-comment-link card-link', data: { resource_class: resource.class.to_s.downcase, resource_id: resource.id }
+        = render 'comments/form', resource: resource
