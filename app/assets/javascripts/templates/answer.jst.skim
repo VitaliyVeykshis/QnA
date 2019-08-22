@@ -1,35 +1,53 @@
-.sugested-answer id="answer-#{@answer.id}"
-  = @answer.body
-  .attachments
-    - if @answer.files
-      - for file in @answer.files
-        .attachment id="attachment-#{file.id}"
-          a href=file.url #{file.filename}
-  - if gon.user_id == @answer.question.user_id
-    p
-      a data-method='patch' data-remote='true' href="/answers/#{@answer.id}/accept" Best
-  .links
-    p Links:
-    ul
-      - for link in @answer.links
-        li id="link-#{link.id}"
-          a href=link.url #{link.name}
-          - if gon.user_id == @answer.user_id
-            a data-method='delete' data-remote='true' data-confirm='Are you sure?' href="/links/#{link.id}" Remove
-          - if link.gist_files
-            .gists
-              - for gist in link.gist_files
-                .gist
-                  p = gist.filename
-                  p = gist.content
-  .vote-cell
+.card.mt-3.sugested-answer id="answer-#{@answer.id}"
+  .card-body
+    .card-text
+      p= @answer.body
+    .form-inline
+      - if gon.user_id == @answer.question.user_id
+          p
+            a.card-link.mr-3 data-method='patch' data-remote='true' href="/answers/#{@answer.id}/accept" Best
+      .vote-cell.input-group
+        - if gon.user_id
+            a.vote-up.card-link.passive id='like' data-method='post' data-remote='true' href="/answers/#{@answer.id}/vote_up"
+              i.fa.fa-thumbs-up
+            a.vote-down.card-link.passive id='dislike' data-method='post' data-remote='true' href="/answers/#{@answer.id}/vote_down"
+              i.fa.fa-thumbs-down
+        .rating.card-link
+          | Rating: 
+          span 0
+  ul.list-group.list-group-flush
+    - if @answer.files.any?
+        li.list-group-item
+          .attachments
+            ' Files
+            ul.list-group
+              - for file in @answer.files
+                li.list-group-item.attachment id="attachment-#{file.id}"
+                  a.card-link href=file.url #{file.filename}
+    - if @answer.links.any?
+        li.list-group-item
+          .links
+            p Links:
+            ul.list-group
+              - for link in @answer.links
+                li.list-group-item id="link-#{link.id}"
+                  a.card-link href=link.url #{link.name}
+                  - if link.gist_files
+                    .gists
+                      - for gist in link.gist_files
+                        .gist
+                          p = gist.filename
+                          p = gist.content
+    li.list-group-item.comments class='d-none' id="comments-answer-#{@answer.id}"
     - if gon.user_id
-      .vote-up
-        a.passive id='like' data-method='post' data-remote='true' href="/answers/#{@answer.id}/vote_up"
-          i.fa.fa-thumbs-up
-      .vote-down
-        a.passive id='dislike' data-method='post' data-remote='true' href="/answers/#{@answer.id}/vote_down"
-          i.fa.fa-thumbs-down
-    .rating
-      | Rating: 
-      span 0
+        li.list-group-item
+          .new-comment
+            a.new-comment-link.card-link data-resource-class='answer' data-resource-id="#{@answer.id}" href="" add a comment
+            form accept-charset="UTF-8" action="/answers/#{@answer.id}/comments" class="d-none" data-remote="true" id="new-comment-answer-#{@answer.id}" method="post"
+              input kl_vkbd_parsed="true" name="utf8" type="hidden" value="✓" 
+              input kl_vkbd_parsed="true" name="authenticity_token" type="hidden" value="#{gon.csrf_token}" 
+              .form-group.body
+                label for="comment_body" Your Comment
+                textarea.form-control id="comment_body" name="comment[body]"
+              .actions
+                input.btn.btn-primary data-disable-with="Post Your Comment" kl_vkbd_parsed="true" name="commit" type="submit" value="Post Your Comment"

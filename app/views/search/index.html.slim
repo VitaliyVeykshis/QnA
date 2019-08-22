@@ -1,0 +1,12 @@
+.container.search-results
+  p
+    strong = "#{@results.dig(:data).size} "
+    = "#{pluralize(@results.dig(:data).size, 'result').split(' ').last} for "
+    strong = "#{@results.dig(:query)}"
+  - @results.dig(:data).each do |result|
+    .card.mb-3
+      .card-body
+        .card-title
+          = link_to result.search_result[:title], result.search_result[:link_to]
+        .card-text
+          = result.search_result[:body]

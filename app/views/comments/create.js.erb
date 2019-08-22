@@ -1,5 +1,6 @@
 <% if comment.persisted? %>
-  var resource1 = $('#<%= commentable.class.to_s.downcase %>-<%= commentable.id %>')
-  $(resource1).find('.comments').append('<%= j render comment %>');
-  $(resource1).find('#comment_body').val('');
+  var resource = $('#<%= commentable.class.to_s.downcase %>-<%= commentable.id %>')
+  $(resource).find('.comments').append('<%= j render comment %>');
+  $(resource).find('.comments').removeClass('d-none');
+  $(resource).find('#comment_body').val('');
 <% end %>

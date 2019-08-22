@@ -1,2 +1,4 @@
-div
-  a href="/questions/#{@question.id}" #{@question.title} 
+.card.mb-3
+  .card-body
+    .card-text
+      a href="/questions/#{@question.id}" #{@question.title}

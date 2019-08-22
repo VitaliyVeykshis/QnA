@@ -13,11 +13,11 @@ class AnswersController < ApplicationController
   def create
     answers << answer
     answer.user = current_user
-    answer.save
+    render_errors_json unless answer.save
   end
 
   def update
-    answer.update(answer_params)
+    render_errors_json unless answer.update(answer_params)
   end
 
   def accept
@@ -34,5 +34,9 @@ class AnswersController < ApplicationController
 
   def find_question
     answer&.question || Question.find(params[:question_id])
+  end
+
+  def render_errors_json
+    render json: answer.errors, status: :unprocessable_entity
   end
 end

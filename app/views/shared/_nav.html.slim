@@ -3,6 +3,7 @@ nav.navbar.navbar-expand-md.navbar-dark.bg-primary.sticky-top
   button.navbar-toggler data-target="#navbarNav" data-toggle="collapse" type="button"
     span.navbar-toggler-icon
   #navbarNav.navbar-collapse.collapse.justify-content-stretch
+    = render 'shared/search'
     ul.navbar-nav.ml-auto
       - if current_user
           li.nav-item.dropdown

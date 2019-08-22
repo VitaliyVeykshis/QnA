@@ -4,6 +4,8 @@ class Link < ApplicationRecord
   validates :name, presence: true
   validates :url, presence: true, format: { with: URI.regexp(%w[http https]) }
 
+  scope :persisted, -> { select(&:persisted?) }
+
   def gist_files
     GetGistFiles.call(gist_url: url).gist_files
   end

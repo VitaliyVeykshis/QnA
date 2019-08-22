@@ -1,11 +1,11 @@
-.form.d-none
+.form.mt-3.d-none
   = form_with model: question, id: 'edit-question-form' do |f|
       .form-group.title
         = f.label :title
-        = f.text_field :title, class: 'form-control'
+        = f.text_field :title, value: question.title, class: 'form-control'
       .form-group.body
         = f.label :body
-        = f.text_area :body, class: 'form-control'
+        = f.text_area :body, value: question.body, class: 'form-control'
       .form-group.files
         = f.label :files
         = f.file_field :files, multiple: true, direct_upload: true, class: 'form-control-file'

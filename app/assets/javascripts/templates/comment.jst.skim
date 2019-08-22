@@ -1,2 +1,2 @@
-p
+.blockquote-footer
   = @comment.body
