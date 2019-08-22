@@ -1,12 +1,25 @@
-h1= question.title
-p= question.body
-= render 'active_storage/attachments/attachments', resource: question
-- if policy(question).update?
-  p= link_to 'Edit', '#', class: 'edit-question-link', data: { question_id: question.id }
-  p= link_to 'Delete question', question_path(question), method: :delete, data: {confirm: 'Are you sure?'}
-  = render 'update_form', question: question
-= render 'subscriptions/links'
-= render 'links/index', resource: question
-= render 'badges/badge', badge: question.badge
-= render 'shared/vote_cell', resource: question
-= render 'comments/list', resource: question
+.card
+  .card-header.bg-primary.text-white
+    h1= question.title
+  .card-body
+    .card-text
+      p= question.body
+      .form-inline
+        - if policy(question).update?
+            = link_to 'Edit', '#', class: 'edit-question-link card-link', data: { question_id: question.id }
+            = link_to 'Delete question', question_path(question), method: :delete, data: {confirm: 'Are you sure?'}, class: 'card-link'
+        = render 'subscriptions/links'
+        = render 'shared/vote_cell', resource: question
+      - if policy(question).update?
+        = render 'update_form', question: question
+  ul.list-group.list-group-flush
+    - if question.files.any?
+        li.list-group-item
+          = render 'active_storage/attachments/attachments', resource: question
+    - if question.links.persisted.any?
+        li.list-group-item
+          = render 'links/index', resource: question
+    - if question.badge.present?
+        li.list-group-item
+          = render 'badges/badge', badge: question.badge
+    = render 'comments/list', resource: question
