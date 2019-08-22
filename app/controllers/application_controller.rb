@@ -1,7 +1,7 @@
 class ApplicationController < ActionController::Base
   include Pundit
 
-  before_action :gon_user
+  before_action :gon_user, :csrf_token
   after_action :verify_authorized, unless: :devise_controller?
 
   rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
@@ -11,7 +11,11 @@ class ApplicationController < ActionController::Base
   private
 
   def gon_user
-    gon.user_id = current_user.id if current_user
+    gon.user_id = current_user&.id
+  end
+
+  def csrf_token
+    gon.csrf_token = form_authenticity_token
   end
 
   def user_not_authorized
