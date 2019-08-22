@@ -1,8 +1,9 @@
-= form_with model: answer, class: 'd-none', html: { id: "edit-answer-#{ answer.id}" } do |f|
-  .answer-errors
-      = render 'shared/errors', resource: answer
-  = f.text_area :body, placeholder: answer.body
-  = f.label :files
-  = f.file_field :files, multiple: true, direct_upload: true
+= form_with model: answer, class: 'd-none mt-3', html: { id: "edit-answer-#{ answer.id}" } do |f|
+  .form-group.body
+    = f.text_area :body, value: answer.body, class: 'form-control'
+  .form-group.files
+    = f.label :files
+    = f.file_field :files, multiple: true, direct_upload: true, class: 'form-control-file'
   = render 'links/new' ,resource: answer, f: f
-  = f.submit 'Save'
+  .actions
+    = f.submit 'Save', class: 'btn btn-primary'

@@ -39,10 +39,16 @@ RSpec.describe AnswersController, type: :controller do
         end.not_to change(Answer, :count)
       end
 
-      it 'renders answer create template' do
+      it 'renders json with error message' do
         post :create, params: options, format: :js
 
-        expect(response).to render_template :create
+        expect(response.body).to eq "{\"body\":[\"can't be blank\"]}"
+      end
+
+      it 'renders json with status :unprocessable_entity' do
+        post :create, params: options, format: :js
+
+        expect(response).to have_http_status :unprocessable_entity
       end
     end
   end
@@ -101,9 +107,16 @@ RSpec.describe AnswersController, type: :controller do
         end.not_to change(answer, :body)
       end
 
-      it 'renders update template' do
-        patch :update, params: options , format: :js
-        expect(response).to render_template :update
+      it 'renders json with error message' do
+        post :update, params: options, format: :js
+
+        expect(response.body).to eq "{\"body\":[\"can't be blank\"]}"
+      end
+
+      it 'renders json with status :unprocessable_entity' do
+        post :update, params: options, format: :js
+
+        expect(response).to have_http_status :unprocessable_entity
       end
     end
 
