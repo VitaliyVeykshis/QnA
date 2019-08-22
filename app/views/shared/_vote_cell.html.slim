@@ -1,9 +1,7 @@
-.vote-cell
+.vote-cell.input-group
   - if policy(resource).vote_up?
-    .vote-up
-      = link_to fa_icon('thumbs-up'), polymorphic_path(resource, action: :vote_up), method: :post, remote: true, id: 'like', class: current_user.voted_up_on?(resource) ? 'active' : 'passive'
-    .vote-down
-      = link_to fa_icon('thumbs-down'), polymorphic_path(resource, action: :vote_down), method: :post, remote: true, id: 'dislike', class: current_user.voted_down_on?(resource) ? 'active' : 'passive'
-  .rating
+      = link_to fa_icon('thumbs-up'), polymorphic_path(resource, action: :vote_up), method: :post, remote: true, id: 'like', class: "vote-up card-link #{current_user.voted_up_on?(resource) ? 'active' : 'passive'}"
+      = link_to fa_icon('thumbs-down'), polymorphic_path(resource, action: :vote_down), method: :post, remote: true, id: 'dislike', class: "vote-down card-link #{current_user.voted_down_on?(resource) ? 'active' : 'passive'}"
+  .rating.card-link
     | Rating: 
     span #{resource.rating}

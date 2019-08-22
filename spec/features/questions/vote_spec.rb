@@ -18,9 +18,7 @@ feature 'The user estimates the question', %q{
       within '.question' do
         click_on 'like'
         expect(page).to have_content 'Rating: 1'
-        within '.vote-up' do
-          expect(page).to have_css('.active')
-        end
+        expect(page).to have_css('.vote-up.active')
       end
     end
 
@@ -28,9 +26,7 @@ feature 'The user estimates the question', %q{
       within '.question' do
         click_on 'dislike'
         expect(page).to have_content 'Rating: -1'
-        within '.vote-down' do
-          expect(page).to have_css('.active')
-        end
+        expect(page).to have_css('.vote-down.active')
       end
     end
 
@@ -40,9 +36,7 @@ feature 'The user estimates the question', %q{
         click_on 'like'
         sleep 1
         expect(page).to have_content 'Rating: 0'
-        within '.vote-up' do
-          expect(page).to have_no_css('.active')
-        end
+        expect(page).to have_no_css('.vote-up.active')
       end
     end
   end
