@@ -1,5 +1,5 @@
 doctype html
-html
+html.h-100
   head
     title
       | Qna
@@ -8,12 +8,9 @@ html
     = csp_meta_tag
     = stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload'
     = javascript_include_tag 'application', 'data-turbolinks-track': 'reload'
-  body
+  body.d-flex.flex-column.h-100
     = render 'shared/nav'
-    = render 'shared/flash'
-    / p.notice
-    /   = notice
-    / p.alert
-    /   = alert
-    = yield
+    main.flex-grow-1 role='main'
+      = render 'shared/flash'
+      = yield
     = render 'shared/footer'
