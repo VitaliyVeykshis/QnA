@@ -5,7 +5,7 @@
         = f.text_field :title, class: 'form-control'
       .form-group.body
         = f.label :body
-        = f.text_area :body, class: 'form-control'
+        = f.text_area :body, rows: 8, class: 'form-control'
       = f.fields_for :badge do |b|
         .form-group.badge-title
           = b.label :title, 'Badge title'

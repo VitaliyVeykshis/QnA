@@ -1,6 +1,6 @@
 = form_with model: answer, class: 'd-none mt-3', html: { id: "edit-answer-#{ answer.id}" } do |f|
   .form-group.body
-    = f.text_area :body, value: answer.body, class: 'form-control'
+    = f.text_area :body, rows: 8, value: answer.body, class: 'form-control'
   .form-group.files
     = f.label :files
     = f.file_field :files, multiple: true, direct_upload: true, class: 'form-control-file'
