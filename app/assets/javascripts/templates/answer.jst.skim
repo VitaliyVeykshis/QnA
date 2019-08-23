@@ -4,9 +4,8 @@
       p= @answer.body
     .form-inline
       - if gon.user_id == @answer.question.user_id
-          p
-            a.card-link.mr-3 data-method='patch' data-remote='true' href="/answers/#{@answer.id}/accept" Best
-      .vote-cell.input-group
+          a.card-link.mr-3 data-method='patch' data-remote='true' href="/answers/#{@answer.id}/accept" Best
+      .vote-cell.input-group.ml-auto
         - if gon.user_id
             a.vote-up.card-link.passive id='like' data-method='post' data-remote='true' href="/answers/#{@answer.id}/vote_up"
               i.fa.fa-thumbs-up

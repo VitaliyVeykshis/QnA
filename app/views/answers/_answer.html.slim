@@ -8,7 +8,7 @@
             = link_to 'Edit', '#', class: 'edit-answer-link card-link', data: { answer_id: answer.id }
             = link_to 'Delete answer', answer_path(answer), method: :delete, data: { confirm: 'Are you sure?', remote: true }, class: 'card-link'
         - if policy(answer).accept?
-          = link_to 'Best', accept_answer_path(answer), method: :patch, remote: true, class: 'card-link mr-3'
+          = link_to 'Best', accept_answer_path(answer), method: :patch, remote: true, class: 'card-link'
         = render 'shared/vote_cell', resource: answer
       - if policy(answer).update?
         = render 'answers/update_form', answer: answer
