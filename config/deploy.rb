@@ -16,3 +16,6 @@ append :linked_dirs, 'log', 'tmp/pids', 'tmp/cache', 'tmp/sockets', 'public/syst
 
 # Setup sidekiq queues
 set :sidekiq_queue, %w[default mailers]
+
+# Setup unicorn
+after 'deploy:publishing', 'unicorn:restart'
