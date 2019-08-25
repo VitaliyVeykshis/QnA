@@ -1,22 +1,23 @@
--if answer.persisted?
-  .card.mt-3 class=(answer.accepted? ? 'accepted-answer' : 'sugested-answer') id="answer-#{answer.id}"
-    .card-body
-      .card-text
-        p= answer.body
-      .form-inline
+- if answer.persisted?
+  - cache answer do
+    .card.mt-3 class=(answer.accepted? ? 'accepted-answer' : 'sugested-answer') id="answer-#{answer.id}"
+      .card-body
+        .card-text
+          p= answer.body
+        .form-inline
+          - if policy(answer).update?
+              = link_to 'Edit', '#', class: 'edit-answer-link card-link', data: { answer_id: answer.id }
+              = link_to 'Delete answer', answer_path(answer), method: :delete, data: { confirm: 'Are you sure?', remote: true }, class: 'card-link'
+          - if policy(answer).accept?
+            = link_to 'Best', accept_answer_path(answer), method: :patch, remote: true, class: 'card-link'
+          = render 'shared/vote_cell', resource: answer
         - if policy(answer).update?
-            = link_to 'Edit', '#', class: 'edit-answer-link card-link', data: { answer_id: answer.id }
-            = link_to 'Delete answer', answer_path(answer), method: :delete, data: { confirm: 'Are you sure?', remote: true }, class: 'card-link'
-        - if policy(answer).accept?
-          = link_to 'Best', accept_answer_path(answer), method: :patch, remote: true, class: 'card-link'
-        = render 'shared/vote_cell', resource: answer
-      - if policy(answer).update?
-        = render 'answers/update_form', answer: answer
-    ul.list-group.list-group-flush
-      - if answer.files.any?
-          li.list-group-item
-            = render 'active_storage/attachments/attachments', resource: answer
-      - if answer.links.persisted.any?
-          li.list-group-item
-            = render 'links/index', resource: answer
-      = render 'comments/list', resource: answer
+          = render 'answers/update_form', answer: answer
+      ul.list-group.list-group-flush
+        - if answer.files.any?
+            li.list-group-item
+              = render 'active_storage/attachments/attachments', resource: answer
+        - if answer.links.persisted.any?
+            li.list-group-item
+              = render 'links/index', resource: answer
+        = render 'comments/list', resource: answer
